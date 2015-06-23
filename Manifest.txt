@@ -1,8 +1,8 @@
 .simplecov
 ChangeLog
-History.rdoc
+History.md
 Manifest.txt
-README.rdoc
+README.md
 Rakefile
 lib/chione.rb
 lib/chione/aspect.rb

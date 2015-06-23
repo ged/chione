@@ -19,8 +19,8 @@ Hoe.plugins.delete :rubyforge
 Hoe.plugins.delete :gemcutter
 
 hoespec = Hoe.spec 'chione' do |spec|
-	spec.readme_file = 'README.rdoc'
-	spec.history_file = 'History.rdoc'
+	spec.readme_file = 'README.md'
+	spec.history_file = 'History.md'
 	spec.extra_rdoc_files = FileList[ '*.rdoc' ]
 	spec.license 'BSD'
 

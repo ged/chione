@@ -1,31 +1,31 @@
-= Chione
+# Chione
 
-home :: http://faelidth.org/chione
-code :: http://bitbucket.org/ged/chione
-github :: http://github.com/ged/chione
-docs :: http://faelidth.org/chione/docs
+home :: http://faelidth.org/chione 
+code :: http://bitbucket.org/ged/chione 
+github :: http://github.com/ged/chione 
+docs :: http://faelidth.org/chione/docs 
 
 
-== Description
+## Description
 
 An Entity/Component System inspired by Artemis.
 
 
-== Prerequisites
+## Prerequisites
 
 * Ruby 2.2
 
 
-== Installation
+## Installation
 
     $ gem install chione
 
 
-== Contributing
+## Contributing
 
 You can check out the current development source with Mercurial via its
-{project page}[http://bitbucket.org/ged/chione]. Or if you prefer Git, via 
-{its Github mirror}[https://github.com/ged/chione].
+[project page][bitbucket]. Or if you prefer Git, via 
+[its Github mirror][github].
 
 After checking out the source, run:
 
@@ -35,7 +35,7 @@ This task will install any missing dependencies, run the tests/specs,
 and generate the API documentation.
 
 
-== License
+## License
 
 Copyright (c) 2015, Michael Granger
 All rights reserved.
@@ -65,4 +65,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+
+[bitbucket]: http://bitbucket.org/ged/chione
+[github]: https://github.com/ged/chione
 

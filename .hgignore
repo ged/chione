@@ -1,0 +1,10 @@
+.rbx/
+ChangeLog
+\.DS_Store
+\.pid$
+\.sqlite$
+\.sublime-.*$
+^coverage/
+^doc/
+^pkg/
+^static/

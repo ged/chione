@@ -34,14 +34,6 @@ hoespec = Hoe.spec 'chione' do |spec|
 	spec.dependency 'simplecov',               '~> 0.7',  :developer
 	spec.dependency 'rdoc-generator-fivefish', '~> 0.2',  :developer
 
-	spec.spec_extras[:rdoc_options] = [
-		'-t', 'Chione ECS Framework',
-		'-w', '4',
-	]
-
-	# Use the Fivefish formatter if run in development
-	spec.spec_extras[:rdoc_options] += [ '-f', 'fivefish' ] if File.directory?( '.hg' )
-
 	spec.require_ruby_version( '>=2.2.1' )
 	spec.hg_sign_tags = true if spec.respond_to?( :hg_sign_tags= )
 	spec.check_history_on_release = true if spec.respond_to?( :check_history_on_release= )
@@ -54,7 +46,7 @@ end
 ENV['VERSION'] ||= hoespec.spec.version.to_s
 
 # Ensure the specs pass before checking in
-task 'hg:precheckin' => [ :check_history, :check_manifest, :spec ]
+task 'hg:precheckin' => [ :check_history, :check_manifest, :gemspec, :spec ]
 
 # Rebuild the ChangeLog immediately before release
 task :prerelease => 'ChangeLog'
@@ -65,18 +57,35 @@ task :coverage do
 	ENV["COVERAGE"] = 'yes'
 	Rake::Task[:spec].invoke
 end
+CLOBBER.include( 'coverage' )
+
+
+# Use the fivefish formatter for docs generated from development checkout
+if File.directory?( '.hg' )
+	require 'rdoc/task'
+
+	Rake::Task[ 'docs' ].clear
+	RDoc::Task.new( 'docs' ) do |rdoc|
+	    rdoc.main = "README.rdoc"
+	    rdoc.rdoc_files.include( "*.rdoc", "ChangeLog", "lib/**/*.rb" )
+	    rdoc.generator = :fivefish
+		rdoc.title = 'Chione'
+	    rdoc.rdoc_dir = 'doc'
+	end
+end
 
 
 task :gemspec => GEMSPEC
-file GEMSPEC => __FILE__ do |task|
+file GEMSPEC => __FILE__
+task GEMSPEC do |task|
 	spec = $hoespec.spec
 	spec.files.delete( '.gemtest' )
 	spec.signing_key = nil
-	spec.version = "#{spec.version}.pre#{Time.now.strftime("%Y%m%d%H%M%S")}"
+	spec.cert_chain = ['certs/ged.pem']
+	spec.version = "#{spec.version.bump}.0.pre#{Time.now.strftime("%Y%m%d%H%M%S")}"
 	File.open( task.name, 'w' ) do |fh|
 		fh.write( spec.to_ruby )
 	end
 end
 
-task :default => :gemspec
-
+CLOBBER.include( GEMSPEC.to_s )

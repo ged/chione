@@ -21,7 +21,6 @@ Hoe.plugins.delete :gemcutter
 hoespec = Hoe.spec 'chione' do |spec|
 	spec.readme_file = 'README.md'
 	spec.history_file = 'History.md'
-	spec.extra_rdoc_files = FileList[ '*.rdoc' ]
 	spec.license 'BSD'
 
 	spec.developer 'Michael Granger', 'ged@FaerieMUD.org'
@@ -38,7 +37,7 @@ hoespec = Hoe.spec 'chione' do |spec|
 	spec.hg_sign_tags = true if spec.respond_to?( :hg_sign_tags= )
 	spec.check_history_on_release = true if spec.respond_to?( :check_history_on_release= )
 
-	spec.rdoc_locations << "deveiate:/usr/local/www/public/code/#{remote_rdoc_dir}"
+	spec.rdoc_locations << "yhaliwell:/usr/local/www/public/chione/docs"
 end
 
 
@@ -66,8 +65,9 @@ if File.directory?( '.hg' )
 
 	Rake::Task[ 'docs' ].clear
 	RDoc::Task.new( 'docs' ) do |rdoc|
-	    rdoc.main = "README.rdoc"
-	    rdoc.rdoc_files.include( "*.rdoc", "ChangeLog", "lib/**/*.rb" )
+	    rdoc.main = "README.md"
+		rdoc.markup = 'markdown'
+	    rdoc.rdoc_files.include( "*.md", "ChangeLog", "lib/**/*.rb" )
 	    rdoc.generator = :fivefish
 		rdoc.title = 'Chione'
 	    rdoc.rdoc_dir = 'doc'

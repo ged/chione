@@ -32,7 +32,7 @@ class Chione::System
 
 
 	### Create a new Chione::System for the specified +world+.
-	def initialize( world )
+	def initialize( world, * )
 		@world  = world
 		@thread = nil
 		@aspect = []

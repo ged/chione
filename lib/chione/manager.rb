@@ -15,7 +15,7 @@ class Chione::Manager
 
 
 	### Create a new Chione::Manager for the specified +world+.
-	def initialize( world )
+	def initialize( world, * )
 		@world = world
 	end
 

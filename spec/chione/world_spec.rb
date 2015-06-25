@@ -15,8 +15,24 @@ describe Chione::World do
 
 	let( :world ) { described_class.new }
 
-	let( :test_system ) { Class.new(Chione::System) }
-	let( :test_manager ) { Class.new(Chione::Manager) }
+	let( :test_system ) do
+		Class.new( Chione::System ) do
+			def initialize( world, *args )
+				super
+				@args = args
+			end
+			attr_reader :args
+		end
+	end
+	let( :test_manager ) do
+		Class.new( Chione::Manager ) do
+			def initialize( world, *args )
+				super
+				@args = args
+			end
+			attr_reader :args
+		end
+	end
 
 	let( :location_component ) do
 		Class.new( Chione::Component ) do
@@ -196,6 +212,12 @@ describe Chione::World do
 		end
 
 
+		it "can register Systems constructed with custom arguments" do
+			system = world.add_system( test_system, 1, 2 )
+			expect( system.args ).to eq([ 1, 2 ])
+		end
+
+
 		it "broadcasts a `system/added` event when a System is added" do
 			event_payload = nil
 			world.subscribe( 'system/added' ) {|*payload| event_payload = payload }
@@ -214,6 +236,12 @@ describe Chione::World do
 			manager = world.add_manager( test_manager )
 			expect( world.managers ).to include( test_manager )
 			expect( world.managers[test_manager] ).to be( manager )
+		end
+
+
+		it "can register Managers constructed with custom arguments" do
+			manager = world.add_manager( test_manager, 1, 2 )
+			expect( manager.args ).to eq([ 1, 2 ])
 		end
 
 

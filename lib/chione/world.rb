@@ -104,6 +104,12 @@ class Chione::World
 	end
 
 
+	### Returns +true+ if the World is running (i.e., if #start has been called)
+	def running?
+		return @main_thread && @main_thread.running?
+	end
+
+
 	### Stop the world.
 	def stop
 		self.systems.each {|sys| sys.stop }
@@ -201,20 +207,22 @@ class Chione::World
 
 	### Add an instance of the specified +system_type+ to the world and return it.
 	### It will replace any existing system of the same type.
-	def add_system( system_type )
-		system_obj = system_type.new( self )
+	def add_system( system_type, *args )
+		system_obj = system_type.new( self, *args )
 		@systems[ system_type ] = system_obj
 		self.publish( 'system/added', system_obj )
+		system_obj.start if self.running?
 		return system_obj
 	end
 
 
 	### Add an instance of the specified +manager_type+ to the world and return it.
 	### It will replace any existing manager of the same type.
-	def add_manager( manager_type )
-		manager_obj = manager_type.new( self )
+	def add_manager( manager_type, *args )
+		manager_obj = manager_type.new( self, *args )
 		@managers[ manager_type ] = manager_obj
 		self.publish( 'manager/added', manager_obj )
+		manager_obj.start if self.running?
 		return manager_obj
 	end
 

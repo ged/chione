@@ -1,26 +1,25 @@
 # -*- encoding: utf-8 -*-
-# stub: chione 0.1.0.pre20150622212852 ruby lib
+# stub: chione 0.1.0.pre20150624172942 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "chione"
-  s.version = "0.1.0.pre20150622212852"
+  s.version = "0.1.0.pre20150624172942"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Michael Granger"]
   s.cert_chain = ["certs/ged.pem"]
-  s.date = "2015-06-23"
-  s.description = "An Entity/Component System inspired by Artemis."
+  s.date = "2015-06-25"
+  s.description = ""
   s.email = ["ged@FaerieMUD.org"]
-  s.executables = ["chione"]
-  s.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.txt", "History.rdoc", "README.rdoc"]
-  s.files = [".autotest", "History.rdoc", "History.txt", "Manifest.txt", "README.rdoc", "README.txt", "Rakefile", "bin/chione", "lib/chione.rb", "test/test_chione.rb"]
-  s.homepage = "http://faelidth.org/chione"
+  s.extra_rdoc_files = ["History.md", "Manifest.txt", "README.md"]
+  s.files = [".simplecov", "ChangeLog", "History.md", "Manifest.txt", "README.md", "Rakefile", "lib/chione.rb", "lib/chione/aspect.rb", "lib/chione/assemblage.rb", "lib/chione/component.rb", "lib/chione/entity.rb", "lib/chione/manager.rb", "lib/chione/mixins.rb", "lib/chione/system.rb", "lib/chione/world.rb", "spec/chione/aspect_spec.rb", "spec/chione/assemblage_spec.rb", "spec/chione/component_spec.rb", "spec/chione/entity_spec.rb", "spec/chione/manager_spec.rb", "spec/chione/system_spec.rb", "spec/chione/world_spec.rb", "spec/chione_spec.rb", "spec/spec_helper.rb"]
+  s.homepage = "An Entity/Component System framework inspired by Artemis."
   s.licenses = ["BSD"]
-  s.rdoc_options = ["--main", "README.rdoc"]
+  s.rdoc_options = ["--main", "README.md"]
   s.required_ruby_version = Gem::Requirement.new(">= 2.2.1")
   s.rubygems_version = "2.4.7"
-  s.summary = "An Entity/Component System inspired by Artemis."
+  s.summary = ""
 
   if s.respond_to? :specification_version then
     s.specification_version = 4
@@ -34,7 +33,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<hoe-highline>, ["~> 0.2"])
       s.add_development_dependency(%q<rdoc>, ["~> 4.0"])
       s.add_development_dependency(%q<simplecov>, ["~> 0.7"])
-      s.add_development_dependency(%q<rdoc-generator-fivefish>, ["~> 0.2"])
+      s.add_development_dependency(%q<rdoc-generator-fivefish>, ["~> 0.1"])
       s.add_development_dependency(%q<hoe>, ["~> 3.13"])
     else
       s.add_dependency(%q<loggability>, ["~> 0.11"])
@@ -45,7 +44,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<hoe-highline>, ["~> 0.2"])
       s.add_dependency(%q<rdoc>, ["~> 4.0"])
       s.add_dependency(%q<simplecov>, ["~> 0.7"])
-      s.add_dependency(%q<rdoc-generator-fivefish>, ["~> 0.2"])
+      s.add_dependency(%q<rdoc-generator-fivefish>, ["~> 0.1"])
       s.add_dependency(%q<hoe>, ["~> 3.13"])
     end
   else
@@ -57,7 +56,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<hoe-highline>, ["~> 0.2"])
     s.add_dependency(%q<rdoc>, ["~> 4.0"])
     s.add_dependency(%q<simplecov>, ["~> 0.7"])
-    s.add_dependency(%q<rdoc-generator-fivefish>, ["~> 0.2"])
+    s.add_dependency(%q<rdoc-generator-fivefish>, ["~> 0.1"])
     s.add_dependency(%q<hoe>, ["~> 3.13"])
   end
 end

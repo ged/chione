@@ -1,14 +1,18 @@
 # Chione
 
-home :: http://faelidth.org/chione 
-code :: http://bitbucket.org/ged/chione 
-github :: http://github.com/ged/chione 
-docs :: http://faelidth.org/chione/docs 
+An Entity/Component System framework inspired by Artemis.
 
+home
+: http://faelidth.org/chione 
 
-## Description
+code
+: http://bitbucket.org/ged/chione 
 
-An Entity/Component System inspired by Artemis.
+github
+: http://github.com/ged/chione 
+
+docs
+: http://faelidth.org/chione/docs 
 
 
 ## Prerequisites

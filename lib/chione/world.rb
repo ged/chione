@@ -38,6 +38,7 @@ class Chione::World
 
 		@max_stop_wait         = CONFIG_DEFAULTS[:max_stop_wait]
 		@timing_event_interval = CONFIG_DEFAULTS[:timing_event_interval]
+		@timing_event_count = 0
 
 		# Load config values
 		self.extend( Configurability )
@@ -54,6 +55,9 @@ class Chione::World
 
 	# Configurable: The number of seconds between timing events.
 	attr_accessor :timing_event_interval
+
+	# The number of times the event loop has executed.
+	attr_reader :timing_event_count
 
 	# The Hash of all Entities in the World, keyed by ID
 	attr_reader :entities
@@ -91,11 +95,12 @@ class Chione::World
 	def start
 		@main_thread = Thread.new do
 			Thread.current.abort_on_exception = true
+			self.log.info "Main thread (%s) started." % [ Thread.current ]
 			@world_threads.add( Thread.current )
 			@world_threads.enclose
 
-			self.managers.each {|mgr| mgr.start }
-			self.systems.each {|sys| sys.start }
+			self.start_managers
+			self.start_systems
 
 			self.timing_loop
 		end
@@ -104,22 +109,61 @@ class Chione::World
 	end
 
 
+	### Start any Managers registered with the world.
+	def start_managers
+		self.log.info "Starting %d Managers" % [ self.managers.length ]
+		self.managers.each do |manager_class, mgr|
+			self.log.debug "  starting %p" % [ manager_class ]
+			start = Time.now
+			mgr.start
+			finish = Time.now
+			self.log.debug "  started in %0.5fs" % [ finish - start ]
+		end
+	end
+
+
+	### Start any Systems registered with the world.
+	def start_systems
+		self.log.info "Starting %d Systems" % [ self.systems.length ]
+		self.systems.each do |system_class, sys|
+			self.log.debug "  starting %p" % [ system_class ]
+			start = Time.now
+			sys.start
+			finish = Time.now
+			self.log.debug "  started in %0.5fs" % [ finish - start ]
+		end
+	end
+
+
+	### Returns +true+ if the World has been started (but is not necessarily running yet).
+	def started?
+		return @main_thread && @main_thread.alive?
+	end
+
+
 	### Returns +true+ if the World is running (i.e., if #start has been called)
 	def running?
-		return @main_thread && @main_thread.running?
+		return self.started? && self.timing_event_count.nonzero?
 	end
 
 
 	### Stop the world.
 	def stop
-		self.systems.each {|sys| sys.stop }
-		self.managers.each {|mgr| mgr.stop }
+		self.systems.each {|_, sys| sys.stop }
+		self.managers.each {|_, mgr| mgr.stop }
 
 		self.world_threads.list.each do |thr|
+			next if thr == @main_thread
 			thr.join( self.max_stop_wait )
 		end
 
 		self.stop_timing_loop
+	end
+
+
+	### Halt the main timing loop. By default, this just kills the world's main thread.
+	def stop_timing_loop
+		@main_thread.kill
 	end
 
 
@@ -237,21 +281,21 @@ class Chione::World
 	def timing_loop
 		self.log.info "Starting timing loop."
 		last_timing_event = Time.now
-		timing_event_count = 0
+		@timing_event_count = 0
 
 		loop do
 			previous_time, last_timing_event = last_timing_event, Time.now
 
-			self.publish( 'timing', last_timing_event - previous_time, timing_event_count )
+			self.publish( 'timing', last_timing_event - previous_time, @timing_event_count )
 
-			timing_event_count += 1
+			@timing_event_count += 1
 			remaining_time = self.timing_event_interval - (Time.now - last_timing_event)
 
 			if remaining_time > 0
 				sleep( remaining_time )
 			else
 				self.log.warn "Timing loop %d exceeded `timing_event_interval` (by %0.6fs)" %
-					[ timing_event_count, remaining_time.abs ]
+					[ @timing_event_count, remaining_time.abs ]
 			end
 		end
 

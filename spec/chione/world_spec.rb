@@ -20,8 +20,16 @@ describe Chione::World do
 			def initialize( world, *args )
 				super
 				@args = args
+				@started = false
+				@stopped = false
 			end
-			attr_reader :args
+			attr_reader :args, :started, :stopped
+			def start
+				@started = true
+			end
+			def stop
+				@stopped = true
+			end
 		end
 	end
 	let( :test_manager ) do
@@ -30,7 +38,13 @@ describe Chione::World do
 				super
 				@args = args
 			end
-			attr_reader :args
+			attr_reader :args, :started, :stopped
+			def start
+				@started = true
+			end
+			def stop
+				@stopped = true
+			end
 		end
 	end
 
@@ -227,6 +241,15 @@ describe Chione::World do
 			expect( event_payload ).to eq([ 'system/added', sys ])
 		end
 
+
+		it "starts its systems when it starts up" do
+			system = world.add_system( test_system )
+			world.start
+			sleep 0.1 until world.running?
+			world.stop
+			expect( system.started ).to be_truthy
+		end
+
 	end
 
 
@@ -252,6 +275,15 @@ describe Chione::World do
 			manager = world.add_manager( test_manager )
 
 			expect( event_payload ).to eq([ 'manager/added', manager ])
+		end
+
+
+		it "starts its managers when it starts up" do
+			manager = world.add_manager( test_manager )
+			world.start
+			sleep 0.1 until world.running?
+			world.stop
+			expect( manager.started ).to be_truthy
 		end
 
 	end

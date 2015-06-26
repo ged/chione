@@ -24,6 +24,10 @@ class Chione::Manager
 	public
 	######
 
+	# The World which the Manager belongs to
+	attr_reader :world
+
+
 	### Start the Manager as the world is starting. Derivatives must implement this
 	### method.
 	def start

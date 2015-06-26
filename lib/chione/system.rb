@@ -39,6 +39,14 @@ class Chione::System
 	end
 
 
+	######
+	public
+	######
+
+	# The World which the System belongs to
+	attr_reader :world
+
+
 	### Start the system.
 	def start
 		self.log.info "Starting the %p" % [ self.class ]

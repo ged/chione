@@ -8,7 +8,7 @@ SimpleCov.start do
 	end
 
 	if ENV['CIRCLE_ARTIFACTS']
-		dir = "../#{ENV['CIRCLE_ARTIFACTS']}/coverage"
+		dir = ENV['CIRCLE_ARTIFACTS'] + "/coverage"
 		coverage_dir( dir )
 	end
 end

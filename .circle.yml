@@ -1,0 +1,8 @@
+machine:
+  ruby:
+    version: 2.2.2
+
+test:
+  post:
+    - bundle exec rspec -cfd
+

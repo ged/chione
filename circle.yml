@@ -4,5 +4,5 @@ machine:
 
 test:
   post:
-    - bundle exec rspec -cfd
+    - bundle exec rake coverage
 

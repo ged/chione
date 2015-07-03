@@ -17,6 +17,7 @@ describe Chione::World do
 
 	let( :test_system ) do
 		Class.new( Chione::System ) do
+			def self::name; "TestSystem"; end
 			def initialize( world, *args )
 				super
 				@args = args
@@ -34,6 +35,7 @@ describe Chione::World do
 	end
 	let( :test_manager ) do
 		Class.new( Chione::Manager ) do
+			def self::name; "TestManager"; end
 			def initialize( world, *args )
 				super
 				@args = args
@@ -238,7 +240,7 @@ describe Chione::World do
 
 			sys = world.add_system( test_system )
 
-			expect( event_payload ).to eq([ 'system/added', [sys] ])
+			expect( event_payload ).to eq([ 'system/added', [test_system.name] ])
 		end
 
 
@@ -274,7 +276,7 @@ describe Chione::World do
 
 			manager = world.add_manager( test_manager )
 
-			expect( event_payload ).to eq([ 'manager/added', [manager] ])
+			expect( event_payload ).to eq([ 'manager/added', [test_manager.name] ])
 		end
 
 

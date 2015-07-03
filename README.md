@@ -25,6 +25,23 @@ docs
     $ gem install chione
 
 
+## Resources
+
+Articles/posts on ECS:
+
+* http://gameprogrammingpatterns.com/component.html
+* http://t-machine.org/index.php/2007/09/03/entity-systems-are-the-future-of-mmog-development-part-1/
+* http://www.richardlord.net/blog/what-is-an-entity-framework
+* http://www.richardlord.net/blog/why-use-an-entity-framework
+* http://cowboyprogramming.com/2007/01/05/evolve-your-heirachy/
+
+Other ECS Frameworks:
+
+* https://github.com/junkdog/artemis-odb (Java)
+* https://github.com/libgdx/ashley (Java)
+* http://www.ashframework.org/ (ActionScript)
+
+
 ## Contributing
 
 You can check out the current development source with Mercurial via its

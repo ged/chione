@@ -1,8 +1,0 @@
-machine:
-  ruby:
-    version: 2.2.2
-
-test:
-  post:
-    - bundle exec rake coverage
-

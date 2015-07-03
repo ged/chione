@@ -89,7 +89,7 @@ describe Chione::World do
 				world.publish( 'test/subscription' )
 			}.to change { received.length }.by( 1 )
 
-			expect( received ).to eq([ ['test/subscription'] ])
+			expect( received ).to eq([ ['test/subscription', []] ])
 		end
 
 
@@ -118,8 +118,8 @@ describe Chione::World do
 				}.to change { received.length }.by( 2 )
 
 				expect( received ).to eq([
-					['test/subscription', :stuff],
-					['test/other', 18, 2 ],
+					['test/subscription', [:stuff]],
+					['test/other', [18, 2]],
 				])
 			end
 
@@ -149,8 +149,8 @@ describe Chione::World do
 				}.to change { received.length }.by( 2 )
 
 				expect( received ).to eq([
-					[ 'test/foo', :calliope ],
-					[ 'test/bar', {size: 8, length: 24.4} ],
+					[ 'test/foo', [:calliope] ],
+					[ 'test/bar', [{size: 8, length: 24.4}] ],
 				])
 			end
 
@@ -172,7 +172,7 @@ describe Chione::World do
 			world.subscribe( 'entity/created' ) {|*payload| event_payload = payload }
 			entity = world.create_entity
 
-			expect( event_payload ).to eq([ 'entity/created', entity ])
+			expect( event_payload ).to eq([ 'entity/created', [entity] ])
 		end
 
 	end
@@ -238,7 +238,7 @@ describe Chione::World do
 
 			sys = world.add_system( test_system )
 
-			expect( event_payload ).to eq([ 'system/added', sys ])
+			expect( event_payload ).to eq([ 'system/added', [sys] ])
 		end
 
 
@@ -274,7 +274,7 @@ describe Chione::World do
 
 			manager = world.add_manager( test_manager )
 
-			expect( event_payload ).to eq([ 'manager/added', manager ])
+			expect( event_payload ).to eq([ 'manager/added', [manager] ])
 		end
 
 

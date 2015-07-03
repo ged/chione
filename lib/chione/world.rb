@@ -103,8 +103,10 @@ class Chione::World
 			self.start_systems
 
 			self.timing_loop
+			self.log.info "Done with the timing loop."
 		end
 
+		self.log.info "Started main World thread: %p" % [ @main_thread ]
 		return @main_thread
 	end
 
@@ -173,6 +175,8 @@ class Chione::World
 		callback = Proc.new if !callback && block_given?
 		raise LocalJumpError, "no callback given" unless callback
 		raise ArgumentError, "callback is not callable" unless callback.respond_to?( :call )
+		raise ArgumentError, "callback has wrong arity" unless
+			callback.arity >= 2 || callback.arity < 0
 
 		@subscriptions[ event_name ] = callback
 
@@ -189,10 +193,11 @@ class Chione::World
 	### Publish an event with the specified +event_name+, calling any subscribers with
 	### the specified +payload+.
 	def publish( event_name, *payload )
+		self.log.debug "Publishing a %p event: %p" % [ event_name, payload ]
 		@subscriptions.each_key do |pattern|
 			next unless File.fnmatch?( pattern, event_name, File::FNM_EXTGLOB|File::FNM_PATHNAME )
 			begin
-				@subscriptions[ pattern ].call( event_name, *payload )
+				@subscriptions[ pattern ].call( event_name, payload )
 			rescue => err
 				self.log.error "%p while calling the callback for a %p event: %s" %
 					[ err.class, event_name, err.message ]
@@ -254,8 +259,13 @@ class Chione::World
 	def add_system( system_type, *args )
 		system_obj = system_type.new( self, *args )
 		@systems[ system_type ] = system_obj
-		self.publish( 'system/added', system_obj )
-		system_obj.start if self.running?
+
+		if self.running?
+			self.log.info "Starting %p added to running world." % [ system_type ]
+			system_obj.start
+		end
+
+		self.publish( 'system/added', system_type.name )
 		return system_obj
 	end
 
@@ -265,8 +275,13 @@ class Chione::World
 	def add_manager( manager_type, *args )
 		manager_obj = manager_type.new( self, *args )
 		@managers[ manager_type ] = manager_obj
-		self.publish( 'manager/added', manager_obj )
-		manager_obj.start if self.running?
+
+		if self.running?
+			self.log.info "Starting %p added to running world." % [ manager_type ]
+			manager_obj.start
+		end
+
+		self.publish( 'manager/added', manager_type.name )
 		return manager_obj
 	end
 

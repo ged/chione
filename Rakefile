@@ -47,6 +47,8 @@ ENV['VERSION'] ||= hoespec.spec.version.to_s
 # Ensure the specs pass before checking in
 task 'hg:precheckin' => [ :check_history, :check_manifest, :gemspec, :spec ]
 
+task :test => :spec
+
 # Rebuild the ChangeLog immediately before release
 task :prerelease => 'ChangeLog'
 CLOBBER.include( 'ChangeLog' )

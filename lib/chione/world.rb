@@ -265,7 +265,7 @@ class Chione::World
 			system_obj.start
 		end
 
-		self.publish( 'system/added', system_type.name )
+		self.publish( 'system/added', system_type )
 		return system_obj
 	end
 
@@ -281,7 +281,7 @@ class Chione::World
 			manager_obj.start
 		end
 
-		self.publish( 'manager/added', manager_type.name )
+		self.publish( 'manager/added', manager_type )
 		return manager_obj
 	end
 

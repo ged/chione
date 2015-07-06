@@ -240,7 +240,7 @@ describe Chione::World do
 
 			sys = world.add_system( test_system )
 
-			expect( event_payload ).to eq([ 'system/added', [test_system.name] ])
+			expect( event_payload ).to eq([ 'system/added', [test_system] ])
 		end
 
 
@@ -276,7 +276,7 @@ describe Chione::World do
 
 			manager = world.add_manager( test_manager )
 
-			expect( event_payload ).to eq([ 'manager/added', [test_manager.name] ])
+			expect( event_payload ).to eq([ 'manager/added', [test_manager] ])
 		end
 
 

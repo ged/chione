@@ -8,6 +8,7 @@ Rakefile
 lib/chione.rb
 lib/chione/aspect.rb
 lib/chione/assemblage.rb
+lib/chione/behaviors.rb
 lib/chione/component.rb
 lib/chione/entity.rb
 lib/chione/manager.rb

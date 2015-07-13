@@ -57,6 +57,24 @@ describe Chione::Entity do
 			expect( entity ).to have_component( tags_component )
 		end
 
+
+		it "lets components be fetched from it" do
+			entity.add_component( location_component.new )
+			entity.add_component( tags_component.new )
+
+			expect(
+				entity.get_component( location_component )
+			).to eq( entity.components[location_component] )
+		end
+
+
+		it "raises a KeyError if a component that it doesn't have is fetched" do
+			entity.add_component( tags_component.new )
+
+			expect {
+				entity.get_component( location_component )
+			}.to raise_error( KeyError, /#{entity.id} doesn't have/i )
+		end
 	end
 
 end

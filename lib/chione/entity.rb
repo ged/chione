@@ -52,6 +52,20 @@ class Chione::Entity
 	end
 
 
+	### Fetch the Component of the specified +type+ that belongs to the entity. If the 
+	### Entity doesn't have the specified Component, raises a KeyError unless
+	### +raise_if_missing+ is +false+, in which case it returns +nil+.
+	def get_component( type, raise_if_missing=true )
+		self.components.fetch( type ) do
+			if raise_if_missing
+				raise KeyError, "entity %s doesn't have a %p" % [ self.id, type ]
+			else
+				nil
+			end
+		end
+	end
+
+
 	### Returns +true+ if this entity has the specified +component+.
 	def has_component?( component )
 		return self.components.key?( component )

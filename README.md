@@ -1,18 +1,25 @@
 # Chione
 
+home   :: http://faelidth.org/chione 
+code   :: http://bitbucket.org/ged/chione 
+github :: http://github.com/ged/chione 
+docs   :: http://faelidth.org/chione/docs 
+
+
+## Description
+
 An Entity/Component System framework inspired by Artemis.
 
-home
-: http://faelidth.org/chione 
+This library is still in alpha. While I am using it for a person project, I
+anticipate that it will undergo fairly extensive changes before it's usable by
+anyone but me.
 
-code
-: http://bitbucket.org/ged/chione 
+That said, let me know if you're using it for anything and I'll try to keep
+you abreast of any changes I'm considering, and I'm happy to chat about ideas
+for making it better via email or the project's Gitter channel:
 
-github
-: http://github.com/ged/chione 
+[![Join the chat at https://gitter.im/ged/chione](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ged/chione?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-docs
-: http://faelidth.org/chione/docs 
 
 
 ## Prerequisites

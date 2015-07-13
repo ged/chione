@@ -52,17 +52,12 @@ class Chione::Entity
 	end
 
 
-	### Fetch the Component of the specified +type+ that belongs to the entity. If the 
-	### Entity doesn't have the specified Component, raises a KeyError unless
-	### +raise_if_missing+ is +false+, in which case it returns +nil+.
-	def get_component( type, raise_if_missing=true )
-		self.components.fetch( type ) do
-			if raise_if_missing
-				raise KeyError, "entity %s doesn't have a %p" % [ self.id, type ]
-			else
-				nil
-			end
-		end
+	### Fetch the first Component of the specified +types+ that belongs to the entity. If the
+	### Entity doesn't have any of the specified types of Component, raises a KeyError.
+	def get_component( *types )
+		found_type = types.find {|type| self.components[type] } or
+			raise KeyError, "entity %s doesn't have any of %p" % [ self.id, types ]
+		return self.components[ found_type ]
 	end
 
 

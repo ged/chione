@@ -23,6 +23,14 @@ describe Chione::Entity do
 		end
 	end
 
+	let( :bounding_box_component ) do
+		Class.new( Chione::Component ) do
+			field :width, default: 1
+			field :height, default: 1
+			field :depth, default: 1
+		end
+	end
+
 
 	it "knows what world it was created for" do
 		expect( Chione::Entity.new(world).world ).to be( world )
@@ -68,13 +76,33 @@ describe Chione::Entity do
 		end
 
 
-		it "raises a KeyError if a component that it doesn't have is fetched" do
+		it "lets one of a list of components be fetched from it" do
+			entity.add_component( location_component.new )
+			entity.add_component( tags_component.new )
+
+			expect(
+				entity.get_component( bounding_box_component, location_component )
+			).to eq( entity.components[location_component] )
+		end
+
+
+		it "raises a KeyError if it doesn't have a fetched component" do
 			entity.add_component( tags_component.new )
 
 			expect {
 				entity.get_component( location_component )
 			}.to raise_error( KeyError, /#{entity.id} doesn't have/i )
 		end
+
+
+		it "raises a KeyError if it doesn't have any of several fetched components" do
+			entity.add_component( tags_component.new )
+
+			expect {
+				entity.get_component( location_component, bounding_box_component )
+			}.to raise_error( KeyError, /#{entity.id} doesn't have any of/i )
+		end
+
 	end
 
 end

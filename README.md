@@ -1,5 +1,7 @@
 # Chione
 
+[![Join the chat at https://gitter.im/ged/chione](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ged/chione?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 An Entity/Component System framework inspired by Artemis.
 
 home

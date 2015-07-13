@@ -95,6 +95,18 @@ describe Chione::World do
 		end
 
 
+		it "allows more than one subscription to the same event pattern" do
+			received = []
+			world.subscribe( 'test/subscription' ) {|*args| received << 1 }
+			world.subscribe( 'test/subscription' ) {|*args| received << 2 }
+			expect {
+				world.publish( 'test/subscription' )
+			}.to change { received.length }.by( 2 )
+
+			expect( received ).to eq([ 1, 2 ])
+		end
+
+
 		it "allows unsubscription from events via the returned callback" do
 			received = []
 			callback = world.subscribe( 'test/subscription' ) {|*args| received << args }

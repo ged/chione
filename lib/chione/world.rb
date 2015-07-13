@@ -29,7 +29,9 @@ class Chione::World
 		@systems       = {}
 		@managers      = {}
 
-		@subscriptions = {}
+		@subscriptions = Hash.new do |h,k|
+			h[ k ] = Set.new
+		end
 
 		@main_thread   = nil
 		@world_threads = ThreadGroup.new
@@ -73,6 +75,10 @@ class Chione::World
 
 	# The Thread object running the World's IO reactor loop
 	attr_reader :io_thread
+
+	# The Hash of event subscription callbacks registered with the world, keyed by
+	# event pattern.
+	attr_reader :subscriptions
 
 
 	### Configurability API -- configure the GameWorld.
@@ -173,12 +179,13 @@ class Chione::World
 	### for later unsubscribe calls.
 	def subscribe( event_name, callback=nil )
 		callback = Proc.new if !callback && block_given?
+
 		raise LocalJumpError, "no callback given" unless callback
 		raise ArgumentError, "callback is not callable" unless callback.respond_to?( :call )
 		raise ArgumentError, "callback has wrong arity" unless
 			callback.arity >= 2 || callback.arity < 0
 
-		@subscriptions[ event_name ] = callback
+		@subscriptions[ event_name ].add( callback )
 
 		return callback
 	end
@@ -186,7 +193,7 @@ class Chione::World
 
 	### Unsubscribe from events that publish to the specified +callback+.
 	def unsubscribe( callback )
-		@subscriptions.delete_if {|_,val| val == callback }
+		@subscriptions.values.each {|cbset| cbset.delete(callback) }
 	end
 
 
@@ -194,14 +201,17 @@ class Chione::World
 	### the specified +payload+.
 	def publish( event_name, *payload )
 		self.log.debug "Publishing a %p event: %p" % [ event_name, payload ]
-		@subscriptions.each_key do |pattern|
+		@subscriptions.each do |pattern, callbacks|
 			next unless File.fnmatch?( pattern, event_name, File::FNM_EXTGLOB|File::FNM_PATHNAME )
-			begin
-				@subscriptions[ pattern ].call( event_name, payload )
-			rescue => err
-				self.log.error "%p while calling the callback for a %p event: %s" %
-					[ err.class, event_name, err.message ]
-				@subscriptions.delete( pattern )
+
+			callbacks.each do |callback|
+				begin
+					callback.call( event_name, payload )
+				rescue => err
+					self.log.error "%p while calling %p for a %p event: %s" %
+						[ err.class, callback, event_name, err.message ]
+					callbacks.delete( callback )
+				end
 			end
 		end
 	end
@@ -235,6 +245,14 @@ class Chione::World
 	### +entity+.
 	def add_component_for( entity, component )
 		@entities_by_component[ component.class ].add( entity )
+	end
+
+
+	### Return the Entities that have a Component composition that is compatible with
+	### the specified +system+'s aspect.
+	def entities_for( system )
+		system = system.class unless system.is_a?( Class )
+		return self.entities_with( system.aspect )
 	end
 
 

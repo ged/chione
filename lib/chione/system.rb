@@ -35,7 +35,6 @@ class Chione::System
 	def initialize( world, * )
 		@world  = world
 		@thread = nil
-		@aspect = []
 	end
 
 

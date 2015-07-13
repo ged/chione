@@ -6,14 +6,20 @@ require 'loggability'
 require 'configurability'
 
 require 'chione' unless defined?( Chione )
+require 'chione/mixins'
+
 
 # The main ECS container
 class Chione::World
 	extend Loggability,
-	       Configurability
+	       Configurability,
+	       Chione::MethodUtilities
 
 	# Loggability API -- send logs to the Chione logger
 	log_to :chione
+
+	# Configurability API -- use the 'gameworld' section of the config
+	config_key :gameworld
 
 
 	# Default config tunables
@@ -21,6 +27,31 @@ class Chione::World
 		max_stop_wait: 5,
 		timing_event_interval: 1,
 	}
+
+
+	##
+	# :singleton-method:
+	# Configurable: The maximum number of seconds to wait for any one System
+	# or Manager thread to exit before killing it when shutting down.
+	singleton_attr_accessor :max_stop_wait
+	@max_stop_wait = CONFIG_DEFAULTS[:max_stop_wait]
+
+	##
+	# :singleton-method:
+	# Configurable: The number of seconds between timing events.
+	singleton_attr_accessor :timing_event_interval
+	@timing_event_interval = CONFIG_DEFAULTS[ :timing_event_interval ]
+
+
+	### Configurability API -- configure the GameWorld.
+	def self::configure( config=nil )
+		config = self.defaults.merge( config || {} )
+
+		self.max_stop_wait = config[:max_stop_wait]
+		self.timing_event_interval = config[:timing_event_interval]
+	end
+
+
 
 
 	### Create a new Chione::World
@@ -38,25 +69,13 @@ class Chione::World
 
 		@entities_by_component = Hash.new {|h,k| h[k] = Set.new }
 
-		@max_stop_wait         = CONFIG_DEFAULTS[:max_stop_wait]
-		@timing_event_interval = CONFIG_DEFAULTS[:timing_event_interval]
 		@timing_event_count = 0
-
-		# Load config values
-		self.extend( Configurability )
 	end
 
 
 	######
 	public
 	######
-
-	# Configurable: The maximum number of seconds to wait for any one System
-	# or Manager thread to exit when shutting down.
-	attr_accessor :max_stop_wait
-
-	# Configurable: The number of seconds between timing events.
-	attr_accessor :timing_event_interval
 
 	# The number of times the event loop has executed.
 	attr_reader :timing_event_count
@@ -81,22 +100,6 @@ class Chione::World
 	attr_reader :subscriptions
 
 
-	### Configurability API -- configure the GameWorld.
-	def configure( config=nil )
-		config = self.defaults.merge( config || {} )
-
-		self.max_stop_wait = config[:max_stop_wait]
-		self.timing_event_interval = config[:timing_event_interval]
-	end
-
-
-	### Return the name of the section that should be used to configure new
-	### GameWorlds.
-	def config_key
-		return 'gameworld'
-	end
-
-
 	### Start the world; returns the Thread in which the world is running.
 	def start
 		@main_thread = Thread.new do
@@ -109,7 +112,6 @@ class Chione::World
 			self.start_systems
 
 			self.timing_loop
-			self.log.info "Done with the timing loop."
 		end
 
 		self.log.info "Started main World thread: %p" % [ @main_thread ]
@@ -162,7 +164,7 @@ class Chione::World
 
 		self.world_threads.list.each do |thr|
 			next if thr == @main_thread
-			thr.join( self.max_stop_wait )
+			thr.join( self.class.max_stop_wait )
 		end
 
 		self.stop_timing_loop
@@ -235,9 +237,23 @@ class Chione::World
 	### Destroy the specified entity and remove it from any registered
 	### systems/managers.
 	def destroy_entity( entity )
+		raise ArgumentError, "%p does not contain entity %p" % [ self, entity ] unless
+			self.has_entity?( entity )
+
 		self.publish( 'entity/destroyed', entity )
 		@entities_by_component.each_value {|set| set.delete(entity) }
 		@entities.delete( entity.id )
+	end
+
+
+	### Returns +true+ if the world contains the specified +entity+ or an entity
+	### with +entity+ as the ID.
+	def has_entity?( entity )
+		if entity.respond_to?( :id )
+			return @entities.key?( entity.id )
+		else
+			return @entities.key?( entity )
+		end
 	end
 
 
@@ -314,6 +330,7 @@ class Chione::World
 	def timing_loop
 		self.log.info "Starting timing loop."
 		last_timing_event = Time.now
+		interval = self.class.timing_event_interval
 		@timing_event_count = 0
 
 		loop do
@@ -322,7 +339,7 @@ class Chione::World
 			self.publish( 'timing', last_timing_event - previous_time, @timing_event_count )
 
 			@timing_event_count += 1
-			remaining_time = self.timing_event_interval - (Time.now - last_timing_event)
+			remaining_time = interval - (Time.now - last_timing_event)
 
 			if remaining_time > 0
 				sleep( remaining_time )

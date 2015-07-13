@@ -20,6 +20,7 @@ spec/chione/assemblage_spec.rb
 spec/chione/component_spec.rb
 spec/chione/entity_spec.rb
 spec/chione/manager_spec.rb
+spec/chione/mixins_spec.rb
 spec/chione/system_spec.rb
 spec/chione/world_spec.rb
 spec/chione_spec.rb

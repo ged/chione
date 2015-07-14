@@ -19,8 +19,8 @@ Hoe.plugins.delete :rubyforge
 Hoe.plugins.delete :gemcutter
 
 hoespec = Hoe.spec 'chione' do |spec|
-	spec.readme_file = 'README.md'
-	spec.history_file = 'History.md'
+	spec.readme_file = 'README.rdoc'
+	spec.history_file = 'History.rdoc'
 	spec.license 'BSD'
 
 	spec.developer 'Michael Granger', 'ged@FaerieMUD.org'
@@ -67,9 +67,9 @@ if File.directory?( '.hg' )
 
 	Rake::Task[ 'docs' ].clear
 	RDoc::Task.new( 'docs' ) do |rdoc|
-	    rdoc.main = "README.md"
+	    rdoc.main = "README.rdoc"
 		rdoc.markup = 'markdown'
-	    rdoc.rdoc_files.include( "*.md", "ChangeLog", "lib/**/*.rb" )
+	    rdoc.rdoc_files.include( "*.rdoc", "ChangeLog", "lib/**/*.rb" )
 	    rdoc.generator = :fivefish
 		rdoc.title = 'Chione'
 	    rdoc.rdoc_dir = 'doc'

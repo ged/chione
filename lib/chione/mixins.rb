@@ -8,15 +8,15 @@ module Chione
 
 	# A collection of methods for declaring other methods.
 	#
-	#   class MyClass
-	#       extend Chione::MethodUtilities
+	#     class MyClass
+	#         extend Chione::MethodUtilities
 	#
-	#       singleton_attr_accessor :types
-	#       singleton_method_alias :kinds, :types
-	#   end
+	#         singleton_attr_accessor :types
+	#         singleton_method_alias :kinds, :types
+	#     end
 	#
-	#   MyClass.types = [ :pheno, :proto, :stereo ]
-	#   MyClass.kinds # => [:pheno, :proto, :stereo]
+	#     MyClass.types = [ :pheno, :proto, :stereo ]
+	#     MyClass.kinds # => [:pheno, :proto, :stereo]
 	#
 	module MethodUtilities
 

@@ -6,7 +6,7 @@ require 'loggability'
 require 'chione' unless defined?( Chione )
 
 
-# An Assemblage mixin for defining factories for commmon entity configurations.
+# An Assemblage mixin for defining factories for common entity configurations.
 module Chione::Assemblage
 	extend Loggability
 

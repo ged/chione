@@ -325,7 +325,7 @@ class Chione::World
 	#########
 
 	### The loop the main thread executes after the world is started. The default
-	### implementation just broadcasts the +timing+ event, so will likely want to
+	### implementation just broadcasts the +timing+ event, so you will likely want to
 	### override this if the main thread should do something else.
 	def timing_loop
 		self.log.info "Starting timing loop."

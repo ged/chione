@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
-# stub: chione 0.1.0.pre20150713181710 ruby lib
+# stub: chione 0.1.0.pre20150713182712 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "chione"
-  s.version = "0.1.0.pre20150713181710"
+  s.version = "0.1.0.pre20150713182712"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.email = ["ged@FaerieMUD.org"]
   s.extra_rdoc_files = ["History.rdoc", "Manifest.txt", "README.rdoc"]
   s.files = [".rdoc_options", ".simplecov", "ChangeLog", "History.rdoc", "Manifest.txt", "README.rdoc", "Rakefile", "lib/chione.rb", "lib/chione/aspect.rb", "lib/chione/assemblage.rb", "lib/chione/behaviors.rb", "lib/chione/component.rb", "lib/chione/entity.rb", "lib/chione/manager.rb", "lib/chione/mixins.rb", "lib/chione/system.rb", "lib/chione/world.rb", "spec/chione/aspect_spec.rb", "spec/chione/assemblage_spec.rb", "spec/chione/component_spec.rb", "spec/chione/entity_spec.rb", "spec/chione/manager_spec.rb", "spec/chione/mixins_spec.rb", "spec/chione/system_spec.rb", "spec/chione/world_spec.rb", "spec/chione_spec.rb", "spec/spec_helper.rb"]
-  s.homepage = "http://faelidth.org/chione  "
+  s.homepage = "http://faelidth.org/chione"
   s.licenses = ["BSD"]
   s.rdoc_options = ["--main", "README.rdoc"]
   s.required_ruby_version = Gem::Requirement.new(">= 2.2.1")

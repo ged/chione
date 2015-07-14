@@ -1,9 +1,9 @@
 = Chione
 
-home   :: http://faelidth.org/chione  
-code   :: http://bitbucket.org/ged/chione  
-github :: http://github.com/ged/chione  
-docs   :: http://faelidth.org/chione/docs  
+home   :: http://faelidth.org/chione
+code   :: http://bitbucket.org/ged/chione
+github :: http://github.com/ged/chione
+docs   :: http://faelidth.org/chione/docs
 
 
 == Description

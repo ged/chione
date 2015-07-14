@@ -16,7 +16,6 @@ Hoe.plugin :signing
 Hoe.plugin :deveiate
 
 Hoe.plugins.delete :rubyforge
-Hoe.plugins.delete :gemcutter
 
 hoespec = Hoe.spec 'chione' do |spec|
 	spec.readme_file = 'README.rdoc'

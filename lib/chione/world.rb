@@ -19,38 +19,20 @@ class Chione::World
 	log_to :chione
 
 	# Configurability API -- use the 'gameworld' section of the config
-	config_key :gameworld
+	configurability :gameworld do
 
+		##
+		# :singleton-method:
+		# Configurable: The maximum number of seconds to wait for any one System
+		# or Manager thread to exit before killing it when shutting down.
+		setting :max_stop_wait, default: 5
 
-	# Default config tunables
-	CONFIG_DEFAULTS = {
-		max_stop_wait: 5,
-		timing_event_interval: 1,
-	}
+		##
+		# :singleton-method:
+		# Configurable: The number of seconds between timing events.
+		setting :timing_event_interval, default: 1
 
-
-	##
-	# :singleton-method:
-	# Configurable: The maximum number of seconds to wait for any one System
-	# or Manager thread to exit before killing it when shutting down.
-	singleton_attr_accessor :max_stop_wait
-	@max_stop_wait = CONFIG_DEFAULTS[:max_stop_wait]
-
-	##
-	# :singleton-method:
-	# Configurable: The number of seconds between timing events.
-	singleton_attr_accessor :timing_event_interval
-	@timing_event_interval = CONFIG_DEFAULTS[ :timing_event_interval ]
-
-
-	### Configurability API -- configure the GameWorld.
-	def self::configure( config=nil )
-		config = self.defaults.merge( config || {} )
-
-		self.max_stop_wait = config[:max_stop_wait]
-		self.timing_event_interval = config[:timing_event_interval]
 	end
-
 
 
 
@@ -93,7 +75,7 @@ class Chione::World
 	attr_reader :world_threads
 
 	# The Thread object running the World's IO reactor loop
-	attr_reader :io_thread
+	attr_reader :main_thread
 
 	# The Hash of event subscription callbacks registered with the world, keyed by
 	# event pattern.

@@ -18,21 +18,28 @@ Hoe.plugin :deveiate
 Hoe.plugins.delete :rubyforge
 
 hoespec = Hoe.spec 'chione' do |spec|
-	spec.readme_file = 'README.rdoc'
-	spec.history_file = 'History.rdoc'
-	spec.license 'BSD'
+	spec.readme_file = 'README.md'
+	spec.history_file = 'History.md'
+	spec.extra_rdoc_files = FileList[ '*.rdoc', '*.md' ]
+	spec.license 'BSD-3-Clause'
+	spec.urls = {
+		home:   'http://deveiate.org/projects/LinguaThauma',
+		code:   'http://repo.deveiate.org/LinguaThauma',
+		docs:   'http://deveiate.org/code/LinguaThauma',
+		github: 'http://github.com/ged/LinguaThauma',
+	}
 
 	spec.developer 'Michael Granger', 'ged@FaerieMUD.org'
 
-	spec.dependency 'loggability',     '~> 0.11'
-	spec.dependency 'configurability', '~> 2.2'
+	spec.dependency 'loggability',     '~> 0.12'
+	spec.dependency 'configurability', '~> 3.0'
 	spec.dependency 'uuid',            '~> 2.3'
 
-	spec.dependency 'hoe-deveiate',            '~> 0.3',  :developer
-	spec.dependency 'simplecov',               '~> 0.7',  :developer
+	spec.dependency 'hoe-deveiate',            '~> 0.8',  :developer
+	spec.dependency 'simplecov',               '~> 0.12',  :developer
 	spec.dependency 'rdoc-generator-fivefish', '~> 0.1',  :developer
 
-	spec.require_ruby_version( '>=2.2.1' )
+	spec.require_ruby_version( '>=2.3.3' )
 	spec.hg_sign_tags = true if spec.respond_to?( :hg_sign_tags= )
 	spec.check_history_on_release = true if spec.respond_to?( :check_history_on_release= )
 

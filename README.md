@@ -1,12 +1,19 @@
-= Chione
+# Chione
 
-home   :: http://faelidth.org/chione
-code   :: http://bitbucket.org/ged/chione
-github :: http://github.com/ged/chione
-docs   :: http://faelidth.org/chione/docs
+home
+: http://faelidth.org/chione
+
+code
+: http://bitbucket.org/ged/chione
+
+github
+: http://github.com/ged/chione
+
+docs
+: http://faelidth.org/chione/docs
 
 
-== Description
+## Description
 
 An Entity/Component System framework inspired by Artemis.
 
@@ -16,23 +23,20 @@ that parts of it don't work or could be done a better way.
 
 That said, let me know if you're using it for anything and I'll try to keep
 you abreast of any changes I'm considering, and I'm happy to chat about ideas
-for making it better via email or the project's Gitter channel:
-
-{rdoc-image:https://badges.gitter.im/Join%20Chat.svg}[https://gitter.im/ged/chione]
+for making it better via email or whatever.
 
 
+## Prerequisites
 
-== Prerequisites
-
-* Ruby 2.2
+* Ruby 2.3
 
 
-== Installation
+## Installation
 
     $ gem install chione
 
 
-== Resources
+## Resources
 
 Articles/posts on ECS:
 
@@ -49,10 +53,10 @@ Other ECS Frameworks:
 * http://www.ashframework.org/ (ActionScript)
 
 
-== Contributing
+## Contributing
 
 You can check out the current development source with Mercurial via its
-{project page}[http://bitbucket.org/ged/chione]. Or if you prefer Git, via 
+{project page}[http://bitbucket.org/ged/chione]. Or if you prefer Git, via
 {its Github mirror}[https://github.com/ged/chione].
 
 After checking out the source, run:
@@ -63,9 +67,9 @@ This task will install any missing dependencies, run the tests/specs,
 and generate the API documentation.
 
 
-== License
+## License
 
-Copyright (c) 2015, Michael Granger
+Copyright (c) 2015-2017, Michael Granger
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

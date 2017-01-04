@@ -1,6 +1,5 @@
-# chione.gems generated gem export file. Note that any env variable settings will be missing. Append these after using a ';' field separator
+hoe-deveiate
+loggability
+configurability
+uuid
 
-hoe-deveiate -v0.7.0
-loggability -v0.11.0
-configurability -v '~> 2.2'
-uuid -v '~> 2.3'

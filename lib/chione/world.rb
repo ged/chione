@@ -114,6 +114,13 @@ class Chione::World
 	end
 
 
+	### Stop any Managers running in the world.
+	def stop_managers
+		self.log.info "Stopping managers."
+		self.managers.each {|_, mgr| mgr.stop }
+	end
+
+
 	### Start any Systems registered with the world.
 	def start_systems
 		self.log.info "Starting %d Systems" % [ self.systems.length ]
@@ -124,6 +131,13 @@ class Chione::World
 			finish = Time.now
 			self.log.debug "  started in %0.5fs" % [ finish - start ]
 		end
+	end
+
+
+	### Stop any Systems running in the world.
+	def stop_systems
+		self.log.info "Stopping systems."
+		self.systems.each {|_, sys| sys.stop }
 	end
 
 
@@ -139,22 +153,29 @@ class Chione::World
 	end
 
 
-	### Stop the world.
-	def stop
-		self.systems.each {|_, sys| sys.stop }
-		self.managers.each {|_, mgr| mgr.stop }
-
+	### Kill the threads other than the main thread in the world's thread list.
+	def kill_world_threads
+		self.log.info "Killing child threads."
 		self.world_threads.list.each do |thr|
 			next if thr == @main_thread
+			self.log.debug "  killing: %p" % [ thr ]
 			thr.join( self.class.max_stop_wait )
 		end
+	end
 
+
+	### Stop the world.
+	def stop
+		self.stop_systems
+		self.stop_managers
+		self.kill_world_threads
 		self.stop_timing_loop
 	end
 
 
 	### Halt the main timing loop. By default, this just kills the world's main thread.
 	def stop_timing_loop
+		self.log.info "Stopping the timing loop."
 		@main_thread.kill
 	end
 
@@ -184,7 +205,7 @@ class Chione::World
 	### Publish an event with the specified +event_name+, calling any subscribers with
 	### the specified +payload+.
 	def publish( event_name, *payload )
-		self.log.debug "Publishing a %p event: %p" % [ event_name, payload ]
+		# self.log.debug "Publishing a %p event: %p" % [ event_name, payload ]
 		@subscriptions.each do |pattern, callbacks|
 			next unless File.fnmatch?( pattern, event_name, File::FNM_EXTGLOB|File::FNM_PATHNAME )
 
@@ -194,6 +215,7 @@ class Chione::World
 				rescue => err
 					self.log.error "%p while calling %p for a %p event: %s" %
 						[ err.class, callback, event_name, err.message ]
+					self.log.debug "  %s" % [ err.backtrace.join("\n  ") ]
 					callbacks.delete( callback )
 				end
 			end
@@ -281,7 +303,7 @@ class Chione::World
 			system_obj.start
 		end
 
-		self.publish( 'system/added', system_type )
+		self.publish( 'system/added', system_type.name )
 		return system_obj
 	end
 
@@ -297,7 +319,7 @@ class Chione::World
 			manager_obj.start
 		end
 
-		self.publish( 'manager/added', manager_type )
+		self.publish( 'manager/added', manager_type.name )
 		return manager_obj
 	end
 

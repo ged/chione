@@ -29,3 +29,17 @@ end
 
 
 
+RSpec.shared_examples "a Chione Manager" do |args|
+
+
+	let( :chione_world ) { Chione::World.new }
+
+
+	it "can be created by a Chione::World" do
+		described_class.new( chione_world )
+	end
+
+end
+
+
+

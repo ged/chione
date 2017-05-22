@@ -48,6 +48,17 @@ describe Chione::Component do
 			expect( instance2.things ).to be_empty
 		end
 
+
+		it "calls a callable default if it responds to #call" do
+			component_subclass.field( :oid, default: ->(obj) { obj.object_id } )
+
+			instance1 = component_subclass.new
+			instance2 = component_subclass.new( oid: 121212 )
+
+			expect( instance1.oid ).to eq( instance1.object_id )
+			expect( instance2.oid ).to eq( 121212 )
+		end
+
 	end
 
 end

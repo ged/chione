@@ -4,19 +4,21 @@
 require 'loggability'
 
 require 'chione' unless defined?( Chione )
+require 'chione/mixins'
+
 
 # The Component (data) class
 class Chione::Component
-	extend Loggability
+	extend Loggability,
+		Chione::MethodUtilities
 
 	# Loggability API -- log to the 'chione' logger
 	log_to :chione
 
 
+	##
 	# The Hash of fields implemented by the component
-	class << self
-		attr_accessor :fields
-	end
+	singleton_attr_accessor :fields
 
 
 	### Declare a field for the component named +name+, with a default value of
@@ -32,7 +34,7 @@ class Chione::Component
 	def initialize( values={} )
 		if self.class.fields
 			self.class.fields.each do |name, default|
-				self.method( "#{name}=" ).call( values[name] || deep_copy(default) )
+				self.method( "#{name}=" ).call( values[name] || default_value(default) )
 			end
 		end
 	end
@@ -60,6 +62,14 @@ class Chione::Component
 	#######
 	private
 	#######
+
+	### Process the given +default+ value so it's suitable for use as a default
+	### attribute value.
+	def default_value( default )
+		return default.call( self ) if default.respond_to?( :call )
+		return deep_copy( default )
+	end
+
 
 	### Make a deep copy of the specified +value+.
 	def deep_copy( value )

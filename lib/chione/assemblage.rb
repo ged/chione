@@ -1,6 +1,7 @@
 # -*- ruby -*-
 #encoding: utf-8
 
+require 'pluggability'
 require 'loggability'
 
 require 'chione' unless defined?( Chione )
@@ -8,10 +9,14 @@ require 'chione' unless defined?( Chione )
 
 # An Assemblage mixin for defining factories for common entity configurations.
 module Chione::Assemblage
-	extend Loggability
+	extend Loggability,
+	       Pluggability
 
 	# Loggability API -- log to the chione logger
 	log_to :chione
+
+	# Pluggability API -- load subclasses from the 'chione/assemblage' directory
+	plugin_prefixes 'chione/assemblage'
 
 
 	### Extension callback -- add assemblage functionality to an extended +object+.

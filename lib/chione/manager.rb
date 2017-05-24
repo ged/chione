@@ -1,6 +1,7 @@
 # -*- ruby -*-
 #encoding: utf-8
 
+require 'pluggability'
 require 'loggability'
 
 require 'chione' unless defined?( Chione )
@@ -8,10 +9,14 @@ require 'chione' unless defined?( Chione )
 
 # The Manager class
 class Chione::Manager
-	extend Loggability
+	extend Loggability,
+	       Pluggability
 
 	# Loggability API -- send logs to the Chione logger
 	log_to :chione
+
+	# Pluggability API -- load subclasses from the 'chione/manager' directory
+	plugin_prefixes 'chione/manager'
 
 
 	### Create a new Chione::Manager for the specified +world+.

@@ -1,6 +1,7 @@
 # -*- ruby -*-
 #encoding: utf-8
 
+require 'pluggability'
 require 'loggability'
 
 require 'chione' unless defined?( Chione )
@@ -11,10 +12,14 @@ require 'chione/aspect'
 # The System (behavior) class
 class Chione::System
 	extend Loggability,
+	       Pluggability,
 	       Chione::MethodUtilities
 
 	# Loggability API -- send logs to the Chione logger
 	log_to :chione
+
+	# Pluggability API -- load subclasses from the 'chione/system' directory
+	plugin_prefixes 'chione/system'
 
 
 	### Add the specified +component_types+ to the Aspect of this System as being

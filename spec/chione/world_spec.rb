@@ -24,21 +24,13 @@ describe Chione::World do
 				@args = args
 				@started = false
 				@stopped = false
-				@thread = nil
 			end
-			attr_reader :args, :started, :stopped, :thread
+			attr_reader :args, :started, :stopped
 			def start
 				@started = true
-				super
 			end
 			def stop
-				super
 				@stopped = true
-			end
-			def process_loop
-				loop do
-					sleep 1
-				end
 			end
 		end
 	end
@@ -96,15 +88,6 @@ describe Chione::World do
 		mod.add( location_component, x: 10, y: 8 )
 		mod.add( tags_component, tags: [:foo, :bar] )
 		mod
-	end
-
-
-	it "joins on any Threads started by subsystems when stopping" do
-		system = world.add_system( test_system )
-		world.start
-		sleep 0.1 until world.running?
-		world.stop
-		expect( system.thread ).to_not be_alive
 	end
 
 

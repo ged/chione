@@ -2,6 +2,7 @@
 #encoding: utf-8
 
 require 'loggability'
+require 'pluggability'
 
 require 'chione' unless defined?( Chione )
 require 'chione/mixins'
@@ -10,11 +11,14 @@ require 'chione/mixins'
 # The Component (data) class
 class Chione::Component
 	extend Loggability,
+	    Pluggability,
 		Chione::MethodUtilities
 
 	# Loggability API -- log to the 'chione' logger
 	log_to :chione
 
+	# Pluggability API -- load subclasses from the 'chione/component' directory
+	plugin_prefixes 'chione/component'
 
 	##
 	# The Hash of fields implemented by the component

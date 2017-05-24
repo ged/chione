@@ -24,17 +24,7 @@ describe Chione::System do
 	describe "a subclass" do
 
 		let( :subclass ) do
-			Class.new(described_class) do
-				def initialize( * )
-					super
-					@processed = false
-				end
-				attr_reader :processed
-
-				def process_loop
-					@processed = true
-				end
-			end
+			Class.new(described_class)
 		end
 
 
@@ -50,21 +40,6 @@ describe Chione::System do
 			expect( subclass.aspect.one_of ).to include( tags_component )
 		end
 
-
-		it "is required to implement #process_loop" do
-			expect {
-				Class.new( described_class ).new( :world ).process_loop
-			}.to raise_error( NotImplementedError, /implement required method/i )
-		end
-
-
-		it "runs a Thread in its #process_loop when started" do
-			system = subclass.new( :world )
-			system_thread = system.start
-			expect( system_thread ).to be_a( Thread )
-			system_thread.join( 2 )
-			expect( system.processed ).to be_truthy
-		end
 
 	end
 

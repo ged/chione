@@ -34,7 +34,6 @@ class Chione::System
 	### Create a new Chione::System for the specified +world+.
 	def initialize( world, * )
 		@world  = world
-		@thread = nil
 	end
 
 
@@ -49,21 +48,12 @@ class Chione::System
 	### Start the system.
 	def start
 		self.log.info "Starting the %p" % [ self.class ]
-		@thread = Thread.new( &self.method(:process_loop) )
 	end
 
 
 	### Stop the system.
 	def stop
-		@thread.kill
 	end
 
-
-	### The main loop of the system -- process entities that this system is
-	### interested in at an appropriate interval.
-	def process_loop
-		raise NotImplementedError, "%p does not implement required method #process_loop" %
-			[ self.class ]
-	end
 
 end # class Chione::System

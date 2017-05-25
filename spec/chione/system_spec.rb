@@ -20,6 +20,12 @@ describe Chione::System do
 		end
 	end
 
+	let( :volition_component ) do
+		Class.new( Chione::Component ) do
+			field :verbs, default: []
+		end
+	end
+
 
 	describe "a subclass" do
 
@@ -34,10 +40,20 @@ describe Chione::System do
 
 
 		it "can declare components for its aspect" do
-			subclass.aspect one_of: tags_component
+			subclass.aspect all_of: volition_component,
+				one_of: [ tags_component, location_component ]
 
 			expect( subclass.aspect ).to_not be_empty
-			expect( subclass.aspect.one_of ).to include( tags_component )
+			expect( subclass.aspect.all_of ).to include( volition_component )
+			expect( subclass.aspect.one_of ).to include( tags_component, location_component )
+		end
+
+
+		it "can declare required components for its aspect via shorthand syntax" do
+			subclass.for_entities_that_have( volition_component )
+
+			expect( subclass.aspect ).to_not be_empty
+			expect( subclass.aspect.all_of ).to include( volition_component )
 		end
 
 

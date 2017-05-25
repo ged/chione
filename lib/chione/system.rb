@@ -24,10 +24,12 @@ class Chione::System
 
 	### Add the specified +component_types+ to the Aspect of this System as being
 	### required in any entities it processes.
-	def self::aspect( all_of: nil, one_of: nil, none_of: nil )
+	def self::aspect( *required, all_of: nil, one_of: nil, none_of: nil )
 		@aspect ||= Chione::Aspect.new
 
-		@aspect = @aspect.with_all_of( all_of )   if all_of
+		all_of = required + Array( all_of )
+
+		@aspect = @aspect.with_all_of( all_of )
 		@aspect = @aspect.with_one_of( one_of )   if one_of
 		@aspect = @aspect.with_none_of( none_of ) if none_of
 

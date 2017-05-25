@@ -110,11 +110,18 @@ describe Chione::World do
 
 	describe "publish/subscribe" do
 
+
+		it "starts out with events deferred" do
+			expect( world ).to be_deferring_events
+		end
+
+
 		it "allows subscription to events" do
 			received = []
 			world.subscribe( 'test/subscription' ) {|*args| received << args }
 			expect {
 				world.publish( 'test/subscription' )
+				world.publish_deferred_events
 			}.to change { received.length }.by( 1 )
 
 			expect( received ).to eq([ ['test/subscription', []] ])
@@ -127,6 +134,7 @@ describe Chione::World do
 			world.subscribe( 'test/subscription' ) {|*args| received << 2 }
 			expect {
 				world.publish( 'test/subscription' )
+				world.publish_deferred_events
 			}.to change { received.length }.by( 2 )
 
 			expect( received ).to eq([ 1, 2 ])
@@ -138,6 +146,7 @@ describe Chione::World do
 			expect {
 				Loggability.with_level( :fatal ) do
 					world.publish( 'test/subscription' )
+					world.publish_deferred_events
 				end
 			}.to change { world.subscriptions['test/subscription'].length }.by( -1 )
 			expect( world.subscriptions['test/subscriptions'] ).to_not include( callback )
@@ -151,11 +160,19 @@ describe Chione::World do
 
 			expect {
 				world.publish( 'test/subscription' )
+				world.publish_deferred_events
 			}.to_not change { received.length }
 		end
 
 
 		describe "with glob-style wildcard patterns" do
+
+			let( :world ) do
+				instance = super()
+				instance.defer_events = false
+				instance
+			end
+
 
 			it "matches any one event segment with an asterisk" do
 				received = []
@@ -212,6 +229,13 @@ describe Chione::World do
 
 	describe "entities" do
 
+		let( :world ) do
+			instance = super()
+			instance.defer_events = false
+			instance
+		end
+
+
 		it "can create entities" do
 			expect( world.create_entity ).to be_a( Chione::Entity )
 		end
@@ -245,7 +269,7 @@ describe Chione::World do
 			world.subscribe( 'entity/created' ) {|*payload| event_payload = payload }
 			entity = world.create_entity
 
-			expect( event_payload ).to eq([ 'entity/created', [entity] ])
+			expect( event_payload ).to eq([ 'entity/created', [entity.id] ])
 		end
 
 
@@ -272,6 +296,7 @@ describe Chione::World do
 			world.subscribe( 'entity/destroyed' ) {|*payload| event_payload = payload }
 			entity = world.create_entity
 			world.destroy_entity( entity )
+			world.publish_deferred_events
 
 			expect( event_payload ).to eq([ 'entity/destroyed', [entity] ])
 		end
@@ -280,6 +305,13 @@ describe Chione::World do
 
 
 	describe "components" do
+
+		let( :world ) do
+			instance = super()
+			instance.defer_events = false
+			instance
+		end
+
 
 		let!( :entity1 ) do
 			obj = world.create_entity
@@ -343,6 +375,13 @@ describe Chione::World do
 
 	describe "systems" do
 
+		let( :world ) do
+			instance = super()
+			instance.defer_events = false
+			instance
+		end
+
+
 		it "can have Systems added to it" do
 			system = world.add_system( test_system )
 			expect( world.systems ).to include( test_system )
@@ -358,6 +397,7 @@ describe Chione::World do
 
 		it "broadcasts a `system/added` event when a System is added" do
 			event_payload = nil
+			world.defer_events = false
 			world.subscribe( 'system/added' ) {|*payload| event_payload = payload }
 
 			sys = world.add_system( test_system )
@@ -388,6 +428,13 @@ describe Chione::World do
 
 	describe "managers" do
 
+		let( :world ) do
+			instance = super()
+			instance.defer_events = false
+			instance
+		end
+
+
 		it "can register Managers" do
 			manager = world.add_manager( test_manager )
 			expect( world.managers ).to include( test_manager )
@@ -403,6 +450,7 @@ describe Chione::World do
 
 		it "broadcasts a `manager/added` event when a Manager is added" do
 			event_payload = nil
+			world.defer_events = false
 			world.subscribe( 'manager/added' ) {|*payload| event_payload = payload }
 
 			manager = world.add_manager( test_manager )

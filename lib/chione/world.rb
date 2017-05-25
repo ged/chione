@@ -45,6 +45,8 @@ class Chione::World
 		@subscriptions = Hash.new do |h,k|
 			h[ k ] = Set.new
 		end
+		@defer_events  = true
+		@deferred_events = []
 
 		@main_thread   = nil
 		@world_threads = ThreadGroup.new
@@ -59,27 +61,44 @@ class Chione::World
 	public
 	######
 
+	##
 	# The number of times the event loop has executed.
 	attr_reader :timing_event_count
 
+	##
 	# The Hash of all Entities in the World, keyed by ID
 	attr_reader :entities
 
+	##
 	# The Hash of all Systems currently in the World, keyed by class.
 	attr_reader :systems
 
+	##
 	# The Hash of all Managers currently in the World, keyed by class.
 	attr_reader :managers
 
+	##
 	# The ThreadGroup that contains all Threads managed by the World.
 	attr_reader :world_threads
 
+	##
 	# The Thread object running the World's IO reactor loop
 	attr_reader :main_thread
 
+	##
 	# The Hash of event subscription callbacks registered with the world, keyed by
 	# event pattern.
 	attr_reader :subscriptions
+
+	##
+	# Whether or not to queue published events instead of sending them to
+	# subscribers immediately.
+	attr_predicate_accessor :defer_events
+
+	##
+	# The queue of events that have not yet been sent to subscribers.
+	attr_reader :deferred_events
+	alias_method :deferring_events?, :defer_events?
 
 
 	### Start the world; returns the Thread in which the world is running.
@@ -190,7 +209,7 @@ class Chione::World
 		raise ArgumentError, "callback has wrong arity" unless
 			callback.arity >= 2 || callback.arity < 0
 
-		@subscriptions[ event_name ].add( callback )
+		self.subscriptions[ event_name ].add( callback )
 
 		return callback
 	end
@@ -198,43 +217,83 @@ class Chione::World
 
 	### Unsubscribe from events that publish to the specified +callback+.
 	def unsubscribe( callback )
-		@subscriptions.values.each {|cbset| cbset.delete(callback) }
+		self.subscriptions.keys.each do |pattern|
+			cbset = self.subscriptions[ pattern ]
+			cbset.delete( callback )
+			self.subscriptions.delete( pattern ) if cbset.empty?
+		end
 	end
 
 
-	### Publish an event with the specified +event_name+, calling any subscribers with
-	### the specified +payload+.
+	### Publish an event with the specified +event_name+ and +payload+.
 	def publish( event_name, *payload )
 		# self.log.debug "Publishing a %p event: %p" % [ event_name, payload ]
-		@subscriptions.each do |pattern, callbacks|
+		if self.defer_events?
+			self.deferred_events.push( [event_name, payload] )
+		else
+			self.call_subscription_callbacks( event_name, payload )
+		end
+	end
+
+
+	### Send any deferred events to subscribers.
+	def publish_deferred_events
+		while event = self.deferred_events.shift
+			self.call_subscription_callbacks( *event )
+		end
+	end
+
+
+	### Call the callbacks of any subscriptions matching the specified +event_name+ with
+	### the given +payload+.
+	def call_subscription_callbacks( event_name, payload )
+		self.subscriptions.each do |pattern, callbacks|
 			next unless File.fnmatch?( pattern, event_name, File::FNM_EXTGLOB|File::FNM_PATHNAME )
 
 			callbacks.each do |callback|
-				begin
-					callback.call( event_name, payload )
-				rescue => err
-					self.log.error "%p while calling %p for a %p event: %s" %
-						[ err.class, callback, event_name, err.message ]
-					self.log.debug "  %s" % [ err.backtrace.join("\n  ") ]
-					callbacks.delete( callback )
+				unless self.call_subscription_callback( callback, event_name, payload )
+					self.log.debug "Callback failed; removing it from the subscription."
+					self.unsubscribe( callback )
 				end
 			end
 		end
 	end
 
 
-	### Return a new Chione::Entity for the receiving World.
+	### Call the specified +callback+ with the provided +event_name+ and +payload+, returning
+	### +true+ if the callback executed without error.
+	def call_subscription_callback( callback, event_name, payload )
+		callback.call( event_name, payload )
+		return true
+	rescue => err
+		self.log.error "%p while calling %p for a %p event: %s" %
+			[ err.class, callback, event_name, err.message ]
+		self.log.debug "  %s" % [ err.backtrace.join("\n  ") ]
+		return false
+	end
+
+
+	### Return a new Chione::Entity for the receiving World, using the optional
+	### +assemblage+ to populate it with components if it's specified.
 	def create_entity( assemblage=nil )
 		entity = if assemblage
 				assemblage.construct_for( self )
 			else
-				Chione::Entity.new( self )
+				self.create_blank_entity
 			end
 
 		@entities[ entity.id ] = entity
 
-		self.publish( 'entity/created', entity )
+		self.publish( 'entity/created', entity.id )
 		return entity
+	end
+
+
+	### Return a new Chione::Entity with no components for the receiving world.
+	### Override this if you wish to use a class other than Chione::Entity for your
+	### world.
+	def create_blank_entity
+		return Chione::Entity.new( self )
 	end
 
 
@@ -335,12 +394,14 @@ class Chione::World
 		self.log.info "Starting timing loop."
 		last_timing_event = Time.now
 		interval = self.class.timing_event_interval
+		self.defer_events = false
 		@timing_event_count = 0
 
 		loop do
 			previous_time, last_timing_event = last_timing_event, Time.now
 
 			self.publish( 'timing', last_timing_event - previous_time, @timing_event_count )
+			self.publish_deferred_events
 
 			@timing_event_count += 1
 			remaining_time = interval - (Time.now - last_timing_event)

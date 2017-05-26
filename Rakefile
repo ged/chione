@@ -39,6 +39,7 @@ hoespec = Hoe.spec 'chione' do |spec|
 	spec.dependency 'hoe-deveiate',            '~> 1.0',  :developer
 	spec.dependency 'simplecov',               '~> 0.12',  :developer
 	spec.dependency 'rdoc-generator-fivefish', '~> 0.3',  :developer
+	spec.dependency 'rdoc',                    '~> 5.1',  :developer
 
 	spec.require_ruby_version( '>=2.3.3' )
 	spec.hg_sign_tags = true if spec.respond_to?( :hg_sign_tags= )

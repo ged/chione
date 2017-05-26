@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
-# stub: chione 0.3.0.pre20170525225302 ruby lib
+# stub: chione 0.3.0.pre20170526075613 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "chione".freeze
-  s.version = "0.3.0.pre20170525225302"
+  s.version = "0.3.0.pre20170526075613"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
@@ -34,7 +34,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<hoe-highline>.freeze, ["~> 0.2"])
       s.add_development_dependency(%q<simplecov>.freeze, ["~> 0.12"])
       s.add_development_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0.3"])
-      s.add_development_dependency(%q<rdoc>.freeze, ["~> 4.0"])
+      s.add_development_dependency(%q<rdoc>.freeze, ["~> 5.1"])
       s.add_development_dependency(%q<hoe>.freeze, ["~> 3.16"])
     else
       s.add_dependency(%q<loggability>.freeze, ["~> 0.12"])
@@ -46,7 +46,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<hoe-highline>.freeze, ["~> 0.2"])
       s.add_dependency(%q<simplecov>.freeze, ["~> 0.12"])
       s.add_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0.3"])
-      s.add_dependency(%q<rdoc>.freeze, ["~> 4.0"])
+      s.add_dependency(%q<rdoc>.freeze, ["~> 5.1"])
       s.add_dependency(%q<hoe>.freeze, ["~> 3.16"])
     end
   else
@@ -59,7 +59,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<hoe-highline>.freeze, ["~> 0.2"])
     s.add_dependency(%q<simplecov>.freeze, ["~> 0.12"])
     s.add_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0.3"])
-    s.add_dependency(%q<rdoc>.freeze, ["~> 4.0"])
+    s.add_dependency(%q<rdoc>.freeze, ["~> 5.1"])
     s.add_dependency(%q<hoe>.freeze, ["~> 3.16"])
   end
 end

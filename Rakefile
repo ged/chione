@@ -75,9 +75,9 @@ if File.directory?( '.hg' )
 
 	Rake::Task[ 'docs' ].clear
 	RDoc::Task.new( 'docs' ) do |rdoc|
-	    rdoc.main = "README.rdoc"
+	    rdoc.main = "README.md"
 		rdoc.markup = 'markdown'
-	    rdoc.rdoc_files.include( "*.rdoc", "ChangeLog", "lib/**/*.rb" )
+	    rdoc.rdoc_files.include( "*.md", "ChangeLog", "lib/**/*.rb" )
 	    rdoc.generator = :fivefish
 		rdoc.title = 'Chione'
 	    rdoc.rdoc_dir = 'doc'

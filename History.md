@@ -1,9 +1,14 @@
-##  v0.2.0 [2017-05-24] Michael Granger <ged@FaerieMUD.org>
+##  v0.2.0 [2017-05-26] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:
 
 - Make Assemblage, Component, Manager and System all pluggable.
 - Don't assume the process model of Systems
+- Extract a method for creating blank Entities to facilitate
+  overriding which Entity class is used.
+- Defer event processing until the event loop so events which are
+  published at startup aren't missed.
+- Allow shorthand required component list for system aspects
 
 
 ##  v0.1.0 [2017-05-22] Michael Granger <ged@FaerieMUD.org>

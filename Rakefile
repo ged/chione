@@ -36,9 +36,9 @@ hoespec = Hoe.spec 'chione' do |spec|
 	spec.dependency 'pluggability',    '~> 0.4'
 	spec.dependency 'uuid',            '~> 2.3'
 
-	spec.dependency 'hoe-deveiate',            '~> 0.8',  :developer
+	spec.dependency 'hoe-deveiate',            '~> 1.0',  :developer
 	spec.dependency 'simplecov',               '~> 0.12',  :developer
-	spec.dependency 'rdoc-generator-fivefish', '~> 0.1',  :developer
+	spec.dependency 'rdoc-generator-fivefish', '~> 0.3',  :developer
 
 	spec.require_ruby_version( '>=2.3.3' )
 	spec.hg_sign_tags = true if spec.respond_to?( :hg_sign_tags= )
@@ -87,6 +87,7 @@ end
 task :gemspec => GEMSPEC
 file GEMSPEC => __FILE__
 task GEMSPEC do |task|
+	Rake.application.trace "Updating gemspec"
 	spec = $hoespec.spec
 	spec.files.delete( '.gemtest' )
 	spec.signing_key = nil

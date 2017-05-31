@@ -47,6 +47,7 @@ class Chione::Entity
 	### Add the specified +component+ to the entity. It will replace any existing component
 	### of the same type.
 	def add_component( component )
+		component = Chione::Component( component )
 		self.components[ component.class ] = component
 		self.world.add_component_for( self, component )
 	end
@@ -54,11 +55,12 @@ class Chione::Entity
 
 	### Fetch the first Component of the specified +types+ that belongs to the entity. If the
 	### Entity doesn't have any of the specified types of Component, raises a KeyError.
-	def get_component( *types )
+	def find_component( *types )
 		found_type = types.find {|type| self.components[type] } or
 			raise KeyError, "entity %s doesn't have any of %p" % [ self.id, types ]
 		return self.components[ found_type ]
 	end
+	alias_method :get_component, :find_component
 
 
 	### Returns +true+ if this entity has the specified +component+.

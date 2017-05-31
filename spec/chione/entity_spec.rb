@@ -8,27 +8,47 @@ require 'chione/component'
 
 describe Chione::Entity do
 
+	before( :all ) do
+		@component_classes = Chione::Component.derivatives.dup
+	end
+	before( :each ) do
+		Chione::Component.derivatives.clear
+	end
+	after( :all ) do
+		Chione::Component.derivatives.replace( @component_classes )
+	end
+
+
 	let( :world ) { Chione::World.new }
 
 	let( :location_component ) do
-		Class.new( Chione::Component ) do
+		klass = Class.new( Chione::Component ) do
+			def self::name; "Location"; end
 			field :x, default: 0
 			field :y, default: 0
 		end
+		Chione::Component.derivatives['location'] = klass
+		klass
 	end
 
 	let( :tags_component ) do
-		Class.new( Chione::Component ) do
+		klass = Class.new( Chione::Component ) do
+			def self::name; "Tags"; end
 			field :tags, default: []
 		end
+		Chione::Component.derivatives['tags'] = klass
+		klass
 	end
 
 	let( :bounding_box_component ) do
-		Class.new( Chione::Component ) do
+		klass = Class.new( Chione::Component ) do
+			def self::name; "BoundingBox"; end
 			field :width, default: 1
 			field :height, default: 1
 			field :depth, default: 1
 		end
+		Chione::Component.derivatives['bounding_box'] = klass
+		klass
 	end
 
 
@@ -58,8 +78,20 @@ describe Chione::Entity do
 
 
 		it "can have components added to it" do
-			entity.add_component( location_component.new )
-			entity.add_component( tags_component.new )
+			entity.add_component( location_component )
+			entity.add_component( tags_component )
+
+			expect( entity ).to have_component( location_component )
+			expect( entity ).to have_component( tags_component )
+		end
+
+
+		it "can have components added to it by name" do
+			location_component()
+			tags_component()
+
+			entity.add_component( :location )
+			entity.add_component( :tags )
 
 			expect( entity ).to have_component( location_component )
 			expect( entity ).to have_component( tags_component )
@@ -67,39 +99,39 @@ describe Chione::Entity do
 
 
 		it "lets components be fetched from it" do
-			entity.add_component( location_component.new )
-			entity.add_component( tags_component.new )
+			entity.add_component( location_component )
+			entity.add_component( tags_component )
 
 			expect(
-				entity.get_component( location_component )
+				entity.find_component( location_component )
 			).to eq( entity.components[location_component] )
 		end
 
 
 		it "lets one of a list of components be fetched from it" do
-			entity.add_component( location_component.new )
-			entity.add_component( tags_component.new )
+			entity.add_component( location_component )
+			entity.add_component( tags_component )
 
 			expect(
-				entity.get_component( bounding_box_component, location_component )
+				entity.find_component( bounding_box_component, location_component )
 			).to eq( entity.components[location_component] )
 		end
 
 
 		it "raises a KeyError if it doesn't have a fetched component" do
-			entity.add_component( tags_component.new )
+			entity.add_component( tags_component )
 
 			expect {
-				entity.get_component( location_component )
+				entity.find_component( location_component )
 			}.to raise_error( KeyError, /#{entity.id} doesn't have/i )
 		end
 
 
 		it "raises a KeyError if it doesn't have any of several fetched components" do
-			entity.add_component( tags_component.new )
+			entity.add_component( tags_component )
 
 			expect {
-				entity.get_component( location_component, bounding_box_component )
+				entity.find_component( location_component, bounding_box_component )
 			}.to raise_error( KeyError, /#{entity.id} doesn't have any of/i )
 		end
 

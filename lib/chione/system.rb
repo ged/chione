@@ -63,4 +63,10 @@ class Chione::System
 	end
 
 
+	### Return an Enumerator that yields the entities which this system operators
+	### over.
+	def entities
+		return self.world.entities_for( self )
+	end
+
 end # class Chione::System

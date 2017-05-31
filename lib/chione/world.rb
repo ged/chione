@@ -323,15 +323,16 @@ class Chione::World
 	### Register the specified +component+ as having been added to the specified
 	### +entity+.
 	def add_component_for( entity, component )
+		self.log.debug "Adding %p for %p" % [ component.class, entity ]
 		@entities_by_component[ component.class ].add( entity )
 	end
 
 
-	### Return the Entities that have a Component composition that is compatible with
-	### the specified +system+'s aspect.
+	### Return an Enumerator of the Entities that have a Component composition that
+	### is compatible with the specified +system+'s aspect.
 	def entities_for( system )
 		system = system.class unless system.is_a?( Class )
-		return self.entities_with( system.aspect )
+		return self.entities_with( system.aspect ).to_enum
 	end
 
 

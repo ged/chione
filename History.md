@@ -1,3 +1,25 @@
+##  v0.3.0 [2017-05-31] Michael Granger <ged@FaerieMUD.org>
+
+Changes:
+
+- Rename Assemblage to Archetype to follow Artemis's naming.
+- Rename Entity#get_component to #find_component to more accurately
+  reflect what it does. Aliased to the old name for backward
+  compatibility, but the alias will likely be removed before 1.0.
+
+Enhancements:
+
+- Add a Chione::Component() coercion method
+- Allow a component to be added to an entity by name or class
+- Add an #entities method to System for easy iteration by subclasses.
+- Change the return value of World#entities_for to an Enumerator for
+  future optimizations.
+
+Bugfixes:
+
+- Add a missing private method to Component
+
+
 ##  v0.2.0 [2017-05-26] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:

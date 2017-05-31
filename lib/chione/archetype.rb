@@ -7,19 +7,19 @@ require 'loggability'
 require 'chione' unless defined?( Chione )
 
 
-# An Assemblage mixin for defining factories for common entity configurations.
-module Chione::Assemblage
+# An Archetype mixin for defining factories for common entity configurations.
+module Chione::Archetype
 	extend Loggability,
 	       Pluggability
 
 	# Loggability API -- log to the chione logger
 	log_to :chione
 
-	# Pluggability API -- load subclasses from the 'chione/assemblage' directory
-	plugin_prefixes 'chione/assemblage'
+	# Pluggability API -- load subclasses from the 'chione/archetype' directory
+	plugin_prefixes 'chione/archetype', 'chione/assemblage'
 
 
-	### Extension callback -- add assemblage functionality to an extended +object+.
+	### Extension callback -- add archetype functionality to an extended +object+.
 	def self::extended( object )
 		super
 		object.extend( Loggability )
@@ -28,7 +28,7 @@ module Chione::Assemblage
 	end
 
 
-	### Inclusion callback -- add the components from this assemblage to those in
+	### Inclusion callback -- add the components from this archetype to those in
 	### the specified +mod+.
 	def included( mod )
 		super
@@ -42,19 +42,19 @@ module Chione::Assemblage
 
 	##
 	# The Hash of component types and initialization values to add to entities
-	# constructed by this Assemblage.
+	# constructed by this Archetype.
 	attr_accessor :components
 
 
 	### Add a +component_type+ to the list used when constructing a new entity from
-	### the current Assemblage. The component will be instantiated using the specified
+	### the current Archetype. The component will be instantiated using the specified
 	### +init_args+.
 	def add( component_type, *init_args )
 		self.components[ component_type ] = init_args
 	end
 
 
-	### Construct a new entity for the specified +world+ with all of the assemblage's
+	### Construct a new entity for the specified +world+ with all of the archetype's
 	### components.
 	def construct_for( world )
 		entity = world.create_entity
@@ -66,4 +66,10 @@ module Chione::Assemblage
 		return entity
 	end
 
-end # module Chione::Assemblage
+end # module Chione::Archetype
+
+
+# Backward-compatibility alias
+Chione::Assemblage = Chione::Archetype
+
+

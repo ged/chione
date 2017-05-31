@@ -35,6 +35,7 @@ hoespec = Hoe.spec 'chione' do |spec|
 	spec.dependency 'configurability', '~> 3.0'
 	spec.dependency 'pluggability',    '~> 0.4'
 	spec.dependency 'uuid',            '~> 2.3'
+	spec.dependency 'deprecatable',    '~> 1.0'
 
 	spec.dependency 'hoe-deveiate',            '~> 1.0',  :developer
 	spec.dependency 'simplecov',               '~> 0.12',  :developer
@@ -100,3 +101,4 @@ task GEMSPEC do |task|
 end
 
 CLOBBER.include( GEMSPEC.to_s )
+

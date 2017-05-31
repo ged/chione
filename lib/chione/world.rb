@@ -274,10 +274,10 @@ class Chione::World
 
 
 	### Return a new Chione::Entity for the receiving World, using the optional
-	### +assemblage+ to populate it with components if it's specified.
-	def create_entity( assemblage=nil )
-		entity = if assemblage
-				assemblage.construct_for( self )
+	### +archetype+ to populate it with components if it's specified.
+	def create_entity( archetype=nil )
+		entity = if archetype
+				archetype.construct_for( self )
 			else
 				self.create_blank_entity
 			end

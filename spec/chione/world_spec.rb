@@ -5,7 +5,7 @@ require_relative '../spec_helper'
 require 'chione/world'
 
 require 'chione/aspect'
-require 'chione/assemblage'
+require 'chione/archetype'
 require 'chione/component'
 require 'chione/entity'
 require 'chione/manager'
@@ -82,9 +82,9 @@ describe Chione::World do
 		end
 	end
 
-	let( :assemblage ) do
+	let( :archetype ) do
 		mod = Module.new
-		mod.extend( Chione::Assemblage )
+		mod.extend( Chione::Archetype )
 		mod.add( location_component, x: 10, y: 8 )
 		mod.add( tags_component, tags: [:foo, :bar] )
 		mod
@@ -255,11 +255,11 @@ describe Chione::World do
 		end
 
 
-		it "can create entities using an Assemblage" do
-			entity = world.create_entity( assemblage )
+		it "can create entities using an Archetype" do
+			entity = world.create_entity( archetype )
 
 			expect( entity ).to be_a( Chione::Entity )
-			expect( entity.components.keys ).to include( *assemblage.components.keys )
+			expect( entity.components.keys ).to include( *archetype.components.keys )
 		end
 
 

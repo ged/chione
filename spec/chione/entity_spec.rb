@@ -108,6 +108,16 @@ describe Chione::Entity do
 		end
 
 
+		it "supports backward-compatible component-fetcher method" do
+			entity.add_component( location_component )
+			entity.add_component( tags_component )
+
+			expect(
+				entity.get_component( location_component )
+			).to eq( entity.components[location_component] )
+		end
+
+
 		it "lets one of a list of components be fetched from it" do
 			entity.add_component( location_component )
 			entity.add_component( tags_component )

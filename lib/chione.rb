@@ -3,6 +3,9 @@
 
 require 'uuid'
 require 'loggability'
+require 'deprecatable'
+
+Deprecatable.options.has_at_exit_report = false
 
 # An Entity/Component System inspired by Artemis
 module Chione
@@ -19,12 +22,15 @@ module Chione
 	require 'chione/mixins'
 
 	autoload :Aspect,     'chione/aspect'
-	autoload :Assemblage, 'chione/assemblage'
+	autoload :Archetype,  'chione/archetype'
 	autoload :Component,  'chione/component'
 	autoload :Entity,     'chione/entity'
 	autoload :Manager,    'chione/manager'
 	autoload :System,     'chione/system'
 	autoload :World,      'chione/world'
+
+	# Backward compatibility
+	autoload :Assemblage, 'chione/archetype'
 
 	##
 	# The global UUID object for generating new UUIDs

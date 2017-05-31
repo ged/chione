@@ -1,6 +1,7 @@
 # -*- ruby -*-
 #encoding: utf-8
 
+require 'deprecatable'
 require 'loggability'
 require 'securerandom'
 
@@ -8,7 +9,8 @@ require 'chione' unless defined?( Chione )
 
 # The Entity (identity) class
 class Chione::Entity
-	extend Loggability
+	extend Loggability,
+	       Deprecatable
 
 	# Loggability API -- send logs to the Chione logger
 	log_to :chione
@@ -61,6 +63,7 @@ class Chione::Entity
 		return self.components[ found_type ]
 	end
 	alias_method :get_component, :find_component
+	deprecate :get_component, message: 'Use #find_component instead', removal_version: '1.0'
 
 
 	### Returns +true+ if this entity has the specified +component+.

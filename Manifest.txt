@@ -6,8 +6,8 @@ Manifest.txt
 README.md
 Rakefile
 lib/chione.rb
+lib/chione/archetype.rb
 lib/chione/aspect.rb
-lib/chione/assemblage.rb
 lib/chione/behaviors.rb
 lib/chione/component.rb
 lib/chione/entity.rb
@@ -15,8 +15,8 @@ lib/chione/manager.rb
 lib/chione/mixins.rb
 lib/chione/system.rb
 lib/chione/world.rb
+spec/chione/archetype_spec.rb
 spec/chione/aspect_spec.rb
-spec/chione/assemblage_spec.rb
 spec/chione/component_spec.rb
 spec/chione/entity_spec.rb
 spec/chione/manager_spec.rb

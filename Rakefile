@@ -85,9 +85,12 @@ if File.directory?( '.hg' )
 	end
 end
 
+file __FILE__
+file 'lib/chione.rb'
+file 'Manifest.txt'
 
 task :gemspec => GEMSPEC
-file GEMSPEC => __FILE__
+file GEMSPEC => [ __FILE__, 'Manifest.txt', 'lib/chione.rb' ]
 task GEMSPEC do |task|
 	Rake.application.trace "Updating gemspec"
 	spec = $hoespec.spec

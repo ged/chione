@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
-# stub: chione 0.3.0.pre20170531082621 ruby lib
+# stub: chione 0.4.0.pre20170531092016 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "chione".freeze
-  s.version = "0.3.0.pre20170531082621"
+  s.version = "0.4.0.pre20170531092016"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.description = "An Entity/Component System framework inspired by Artemis.\n\nThis library is still experimental. I am writing it by extracting out ideas from\na multi-user game I'm working on, and things may change radically if I find\nthat parts of it don't work or could be done a better way.\n\nThat said, let me know if you're using it for anything and I'll try to keep\nyou abreast of any changes I'm considering, and I'm happy to chat about ideas\nfor making it better via email or whatever.".freeze
   s.email = ["ged@FaerieMUD.org".freeze]
   s.extra_rdoc_files = ["History.md".freeze, "Manifest.txt".freeze, "README.md".freeze, "History.md".freeze, "README.md".freeze]
-  s.files = [".rdoc_options".freeze, ".simplecov".freeze, "ChangeLog".freeze, "History.md".freeze, "Manifest.txt".freeze, "README.md".freeze, "Rakefile".freeze, "lib/chione.rb".freeze, "lib/chione/archetype.rb".freeze, "lib/chione/aspect.rb".freeze, "lib/chione/behaviors.rb".freeze, "lib/chione/component.rb".freeze, "lib/chione/entity.rb".freeze, "lib/chione/manager.rb".freeze, "lib/chione/mixins.rb".freeze, "lib/chione/system.rb".freeze, "lib/chione/world.rb".freeze, "spec/chione/archetype_spec.rb".freeze, "spec/chione/aspect_spec.rb".freeze, "spec/chione/component_spec.rb".freeze, "spec/chione/entity_spec.rb".freeze, "spec/chione/manager_spec.rb".freeze, "spec/chione/mixins_spec.rb".freeze, "spec/chione/system_spec.rb".freeze, "spec/chione/world_spec.rb".freeze, "spec/chione_spec.rb".freeze, "spec/spec_helper.rb".freeze]
+  s.files = [".rdoc_options".freeze, ".simplecov".freeze, "ChangeLog".freeze, "History.md".freeze, "Manifest.txt".freeze, "README.md".freeze, "Rakefile".freeze, "lib/chione.rb".freeze, "lib/chione/archetype.rb".freeze, "lib/chione/aspect.rb".freeze, "lib/chione/assemblage.rb".freeze, "lib/chione/behaviors.rb".freeze, "lib/chione/component.rb".freeze, "lib/chione/entity.rb".freeze, "lib/chione/manager.rb".freeze, "lib/chione/mixins.rb".freeze, "lib/chione/system.rb".freeze, "lib/chione/world.rb".freeze, "spec/chione/archetype_spec.rb".freeze, "spec/chione/aspect_spec.rb".freeze, "spec/chione/component_spec.rb".freeze, "spec/chione/entity_spec.rb".freeze, "spec/chione/manager_spec.rb".freeze, "spec/chione/mixins_spec.rb".freeze, "spec/chione/system_spec.rb".freeze, "spec/chione/world_spec.rb".freeze, "spec/chione_spec.rb".freeze, "spec/spec_helper.rb".freeze]
   s.homepage = "http://deveiate.org/projects/LinguaThauma".freeze
   s.licenses = ["BSD-3-Clause".freeze]
   s.rdoc_options = ["--main".freeze, "README.md".freeze]

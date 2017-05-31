@@ -69,7 +69,3 @@ module Chione::Archetype
 end # module Chione::Archetype
 
 
-# Backward-compatibility alias
-Chione::Assemblage = Chione::Archetype
-
-

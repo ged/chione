@@ -58,7 +58,9 @@ describe Chione::Archetype do
 
 
 	it "is still loadable as an `Assemblage`" do
-		expect( Chione::Assemblage ).to equal( described_class )
+		expect {
+			expect( Chione::Assemblage ).to equal( described_class )
+		}.to output( /has been renamed/i ).to_stderr
 	end
 
 

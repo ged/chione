@@ -80,4 +80,12 @@ class Chione::Component
 		return Marshal.load( Marshal.dump(value) )
 	end
 
+
+	### Return a slice of the specified +string+ truncated to at most +maxlen+
+	### characters. Returns the unchanged +string+ if it's not longer than +maxlen+.
+	def truncate_string( string, maxlen )
+		return string unless string.length > maxlen
+		return string[ 0, maxlen - 3 ] + '...'
+	end
+
 end # class Chione::Component

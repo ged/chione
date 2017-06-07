@@ -5,12 +5,16 @@ require 'pluggability'
 require 'loggability'
 
 require 'chione' unless defined?( Chione )
+require 'chione/mixins'
 
 
 # The Manager class
 class Chione::Manager
 	extend Loggability,
 	       Pluggability
+
+	include Chione::Inspection
+
 
 	# Loggability API -- send logs to the Chione logger
 	log_to :chione
@@ -45,5 +49,16 @@ class Chione::Manager
 	def stop
 		raise NotImplementedError, "%p does not implement required method #stop" % [ self.class ]
 	end
+
+
+	#########
+	protected
+	#########
+
+	### Return the detail part of the inspection string.
+	def inspect_details
+		return "for %p:%#016x" % [ self.world.class, self.world.object_id * 2 ]
+	end
+
 
 end # class Chione::Manager

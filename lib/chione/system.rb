@@ -15,6 +15,9 @@ class Chione::System
 	       Pluggability,
 	       Chione::MethodUtilities
 
+	include Chione::Inspection
+
+
 	# Loggability API -- send logs to the Chione logger
 	log_to :chione
 
@@ -67,6 +70,16 @@ class Chione::System
 	### over.
 	def entities
 		return self.world.entities_for( self )
+	end
+
+
+	#########
+	protected
+	#########
+
+	### Return the detail part of the inspection string.
+	def inspect_details
+		return "for %p:%#016x" % [ self.world.class, self.world.object_id * 2 ]
 	end
 
 end # class Chione::System

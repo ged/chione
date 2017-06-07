@@ -5,13 +5,14 @@ require 'set'
 require 'loggability'
 
 require 'chione' unless defined?( Chione )
+require 'chione/mixins'
 
 
 # An expression of component-matching criteria used to find entities that should be
 # processed by a System.
 class Chione::Aspect
 	extend Loggability
-
+	include Chione::Inspection
 
 	# Loggability API -- log to the chione logger
 	log_to :chione
@@ -99,29 +100,28 @@ class Chione::Aspect
 	end
 
 
-	### Return a human-readable String representation of the Aspect.
-	def inspect
+	#########
+	protected
+	#########
+
+	### Return the detail part of the #inspect output.
+	def inspect_details
 		parts = []
 		parts << self.one_of_description
 		parts << self.all_of_description
 		parts << self.none_of_description
 		parts.compact!
 
-		str = "#<%p:%#0x matching entities" % [ self.class, self.object_id * 2 ]
+		str = "matching entities"
 		if parts.empty?
 			str << " with any components"
 		else
 			str << parts.join( ', ' )
 		end
-		str << ">"
 
 		return str
 	end
 
-
-	#########
-	protected
-	#########
 
 	### Return a String describing the components matching entities must have at
 	### least one of.

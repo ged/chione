@@ -14,6 +14,9 @@ class Chione::Component
 	    Pluggability,
 		Chione::MethodUtilities
 
+	include Chione::Inspection
+
+
 	# Loggability API -- log to the 'chione' logger
 	log_to :chione
 
@@ -44,13 +47,6 @@ class Chione::Component
 	end
 
 
-	### Return a human-readable representation of the object suitable for debugging.
-	def inspect
-		fields_desc = self.fields_description
-		return "#<%p:%#x %s>" % [ self.class, self.object_id * 2, fields_desc ]
-	end
-
-
 	### Return a description of the fields this component has.
 	def fields_description
 		return self.class.fields.keys.collect do |name|
@@ -61,6 +57,17 @@ class Chione::Component
 			]
 		end.join( ' ' )
 	end
+
+
+	#########
+	protected
+	#########
+
+	### Return the detailed part of the Component's #inspect output.
+	def inspect_details
+		return self.fields_description
+	end
+
 
 
 	#######

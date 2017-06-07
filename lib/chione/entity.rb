@@ -6,11 +6,14 @@ require 'loggability'
 require 'securerandom'
 
 require 'chione' unless defined?( Chione )
+require 'chione/mixins'
 
 # The Entity (identity) class
 class Chione::Entity
 	extend Loggability,
 	       Deprecatable
+
+	include Chione::Inspection
 
 	# Loggability API -- send logs to the Chione logger
 	log_to :chione
@@ -72,11 +75,13 @@ class Chione::Entity
 	end
 
 
-	### Return the Entity as a human-readable string suitable for debugging.
-	def inspect
-		return "#<%p:%0#x ID=%s (%s)>" % [
-			self.class,
-			self.object_id * 2,
+	#########
+	protected
+	#########
+
+	### Return the detailed part of the Entity's #inspect output
+	def inspect_details
+		return "ID=%s (%s)" % [
 			self.id,
 			self.components.keys.map( &:name ).sort.join( '+' )
 		]

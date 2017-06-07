@@ -363,7 +363,24 @@ class Chione::World
 			system_obj.start
 		end
 
-		self.publish( 'system/added', system_type.name )
+		self.publish( 'system/added', system_obj )
+		return system_obj
+	end
+
+
+	### Remove the instance of the specified +system_type+ from the world and return
+	### it if it's been added. Returns +nil+ if no instance of the specified
+	### +system_type+ was added.
+	def remove_system( system_type )
+		system_obj = @systems.delete( system_type ) or return nil
+
+		self.publish( 'system/removed', system_obj )
+
+		if self.running?
+			self.log.info "Stopping %p before being removed from runnning world." % [ system_type ]
+			system_obj.stop
+		end
+
 		return system_obj
 	end
 
@@ -379,7 +396,23 @@ class Chione::World
 			manager_obj.start
 		end
 
-		self.publish( 'manager/added', manager_type.name )
+		self.publish( 'manager/added', manager_obj )
+		return manager_obj
+	end
+
+
+	### Remove the instance of the specified +manager_type+ from the world and
+	### return it if it's been added. Returns +nil+ if no instance of the specified
+	### +manager_type+ was added.
+	def remove_manager( manager_type )
+		manager_obj = @managers.delete( manager_type ) or return nil
+		self.publish( 'manager/removed', manager_obj )
+
+		if self.running?
+			self.log.info "Stopping %p removed from running world." % [ manager_type ]
+			manager_obj.stop
+		end
+
 		return manager_obj
 	end
 

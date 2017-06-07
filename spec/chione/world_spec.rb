@@ -389,6 +389,14 @@ describe Chione::World do
 		end
 
 
+		it "can have Systems removed from it" do
+			world.add_system( test_system )
+			result = world.remove_system( test_system )
+			expect( world.systems ).to_not include( test_system )
+			expect( result ).to be_a( test_system )
+		end
+
+
 		it "can register Systems constructed with custom arguments" do
 			system = world.add_system( test_system, 1, 2 )
 			expect( system.args ).to eq([ 1, 2 ])
@@ -402,7 +410,19 @@ describe Chione::World do
 
 			sys = world.add_system( test_system )
 
-			expect( event_payload ).to eq([ 'system/added', [test_system.name] ])
+			expect( event_payload ).to eq([ 'system/added', [sys] ])
+		end
+
+
+		it "broadcasts a `system/removed` event when a System is removed" do
+			event_payload = nil
+			world.defer_events = false
+			world.subscribe( 'system/removed' ) {|*payload| event_payload = payload }
+
+			sys = world.add_system( test_system )
+			world.remove_system( test_system )
+
+			expect( event_payload ).to eq([ 'system/removed', [sys] ])
 		end
 
 
@@ -423,6 +443,16 @@ describe Chione::World do
 			expect( system.started ).to be_truthy
 		end
 
+
+		it "stops a system before it's removed if it was started" do
+			system = world.add_system( test_system )
+			world.start
+			sleep 0.1 until world.running?
+			world.remove_system( test_system )
+			expect( system.stopped ).to be_truthy
+			world.stop
+		end
+
 	end
 
 
@@ -435,10 +465,17 @@ describe Chione::World do
 		end
 
 
-		it "can register Managers" do
+		it "can have Managers added to it" do
 			manager = world.add_manager( test_manager )
 			expect( world.managers ).to include( test_manager )
 			expect( world.managers[test_manager] ).to be( manager )
+		end
+
+
+		it "can have Managers removed from it" do
+			world.add_manager( test_manager )
+			world.remove_manager( test_manager )
+			expect( world.managers ).to_not include( test_manager )
 		end
 
 
@@ -455,7 +492,19 @@ describe Chione::World do
 
 			manager = world.add_manager( test_manager )
 
-			expect( event_payload ).to eq([ 'manager/added', [test_manager.name] ])
+			expect( event_payload ).to eq([ 'manager/added', [manager] ])
+		end
+
+
+		it "broadcasts a `manager/removed` event when a Manager is removed" do
+			event_payload = nil
+			world.defer_events = false
+			world.subscribe( 'manager/removed' ) {|*payload| event_payload = payload }
+
+			world.add_manager( test_manager )
+			manager = world.remove_manager( test_manager )
+
+			expect( event_payload ).to eq([ 'manager/removed', [manager] ])
 		end
 
 
@@ -474,6 +523,16 @@ describe Chione::World do
 			manager = world.add_manager( test_manager )
 			world.stop
 			expect( manager.started ).to be_truthy
+		end
+
+
+		it "stops a manager when it's removed if it was started" do
+			world.add_manager( test_manager )
+			world.start
+			sleep 0.1 until world.running?
+			manager = world.remove_manager( test_manager )
+			expect( manager.stopped ).to be_truthy
+			world.stop
 		end
 
 	end

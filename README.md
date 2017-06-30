@@ -40,24 +40,28 @@ for making it better via email or whatever.
 
 Articles/posts on ECS:
 
-* http://gameprogrammingpatterns.com/component.html
-* http://t-machine.org/index.php/2007/09/03/entity-systems-are-the-future-of-mmog-development-part-1/
-* http://www.richardlord.net/blog/what-is-an-entity-framework
-* http://www.richardlord.net/blog/why-use-an-entity-framework
-* http://cowboyprogramming.com/2007/01/05/evolve-your-heirachy/
+* <http://gameprogrammingpatterns.com/component.html>
+* <http://t-machine.org/index.php/2007/09/03/entity-systems-are-the-future-of-mmog-development-part-1/>
+* <http://www.richardlord.net/blog/what-is-an-entity-framework>
+* <http://www.richardlord.net/blog/why-use-an-entity-framework>
+* <http://cowboyprogramming.com/2007/01/05/evolve-your-heirachy/>
 
 Other ECS Frameworks:
 
-* https://github.com/junkdog/artemis-odb (Java)
-* https://github.com/libgdx/ashley (Java)
-* http://www.ashframework.org/ (ActionScript)
-
+* <https://github.com/junkdog/artemis-odb> (Java)
+* <http://www.richardlord.net/ash/> (ActionScript)
+* <https://github.com/libgdx/ashley> (Java)
+* <https://github.com/astrosilverio/braga> (Python)
+* <https://github.com/seanfisk/ecs> (Python)
+* <https://github.com/tdavies/Ember2> (ActionScript)
+* <https://github.com/cpowell/ruby-entity-component-framework> (JRuby)
+* <https://github.com/alecmce/xember> (ActionScript)
 
 ## Contributing
 
 You can check out the current development source with Mercurial via its
-{project page}[http://bitbucket.org/ged/chione]. Or if you prefer Git, via
-{its Github mirror}[https://github.com/ged/chione].
+[project page][bitbucket]. Or if you prefer Git, via
+[its Github mirror][github].
 
 After checking out the source, run:
 
@@ -97,4 +101,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+
+[bitbucket]: http://bitbucket.org/ged/chione
+[github]: https://github.com/ged/chione
 

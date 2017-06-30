@@ -139,5 +139,31 @@ describe Chione::Aspect do
 		expect( aspect.none_of ).to include( tags, location )
 	end
 
+
+	describe "entity-matching" do
+
+		it "can find the matching subset of values given a Hash keyed by Components" do
+			world = Chione::World.new
+
+			entity1 = world.create_entity
+			world.add_component_for( entity1, location.new )
+
+			entity2 = world.create_entity
+			world.add_component_for( entity2, location.new )
+			world.add_component_for( entity2, color.new )
+
+			entity3 = world.create_entity
+			world.add_component_for( entity3, location.new )
+			world.add_component_for( entity3, color.new )
+			world.add_component_for( entity3, tags.new )
+
+			aspect = described_class.with_all_of( color, location ).and_none_of( tags )
+			result = aspect.matching_entities( world.entities_by_component )
+
+			expect( result ).to contain_exactly( entity2.id )
+		end
+
+	end
+
 end
 

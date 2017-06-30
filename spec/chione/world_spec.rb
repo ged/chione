@@ -259,7 +259,8 @@ describe Chione::World do
 			entity = world.create_entity( archetype )
 
 			expect( entity ).to be_a( Chione::Entity )
-			expect( entity.components.keys ).to include( *archetype.components.keys )
+			expect( world.components_for(entity).map(&:class) ).
+				to contain_exactly( *archetype.components.keys )
 		end
 
 
@@ -306,68 +307,27 @@ describe Chione::World do
 
 	describe "components" do
 
-		let( :world ) do
-			instance = super()
-			instance.defer_events = false
-			instance
+		it "can add a component for an entity" do
+			entity = world.create_entity
+			world.add_component_for( entity, location_component )
+			expect( world ).to have_component_for( entity, location_component )
 		end
 
 
-		let!( :entity1 ) do
-			obj = world.create_entity
-			obj.add_component( location_component.new )
-			obj
-		end
-
-		let!( :entity2 ) do
-			obj = world.create_entity
-			obj.add_component( location_component.new )
-			obj.add_component( tags_component.new )
-			obj
-		end
-
-		let!( :entity3 ) do
-			obj = world.create_entity
-			obj.add_component( tags_component.new )
-			obj
-		end
-
-		let( :location_aspect ) { Chione::Aspect.with_one_of(location_component) }
-		let( :tags_aspect ) { Chione::Aspect.with_one_of(tags_component) }
-		let( :colored_aspect ) { Chione::Aspect.with_one_of(color_component) }
-		let( :tagged_located_aspect ) do
-			Chione::Aspect.with_all_of( location_component, tags_component )
+		it "can remove a component from an entity" do
+			entity = world.create_entity
+			world.add_component_for( entity, location_component )
+			world.remove_component_from( entity, location_component )
+			expect( world ).to_not have_component_for( entity, location_component )
 		end
 
 
-		it "can look up sets of entities which match Aspects" do
-			entities_with_location = world.entities_with( location_aspect )
-			expect( entities_with_location ).to include( entity1, entity2 )
-			expect( entities_with_location ).to_not include( entity3 )
+		it "can test to see whether an entity has a component type" do
+			entity = world.create_entity
 
-			entities_with_tags = world.entities_with( tags_aspect )
-			expect( entities_with_tags ).to include( entity2, entity3 )
-			expect( entities_with_tags ).to_not include( entity1 )
-
-			entities_with_both = world.entities_with( tagged_located_aspect )
-			expect( entities_with_both ).to include( entity2 )
-			expect( entities_with_both ).to_not include( entity1, entity3 )
-
-			entities_with_color = world.entities_with( colored_aspect )
-			expect( entities_with_color ).to be_empty
-		end
-
-
-		it "can look up sets of entities which match a System's aspect" do
-			system = Class.new( Chione::System )
-			system.for_entities_that_have \
-				all_of: [ location_component ],
-				one_of: [ tags_component, color_component ]
-
-			entities = world.entities_for( system )
-
-			expect( entities ).to include( entity2 )
-			expect( entities ).to_not include( entity1, entity3 )
+			expect( world ).to_not have_component_for( entity, location_component )
+			world.add_component_for( entity, location_component )
+			expect( world ).to have_component_for( entity, location_component )
 		end
 
 	end
@@ -451,6 +411,50 @@ describe Chione::World do
 			world.remove_system( test_system )
 			expect( system.stopped ).to be_truthy
 			world.stop
+		end
+
+	end
+
+
+	describe "aspects" do
+
+		let( :entity1 ) do
+			obj = world.create_entity
+			obj.add_component( location_component.new )
+			obj
+		end
+		let( :entity2 ) do
+			obj = world.create_entity
+			obj.add_component( location_component.new )
+			obj.add_component( tags_component.new )
+			obj
+		end
+		let( :entity3 ) do
+			obj = world.create_entity
+			obj.add_component( tags_component.new )
+			obj
+		end
+
+		let( :location_aspect ) { Chione::Aspect.with_one_of(location_component) }
+		let( :tags_aspect ) { Chione::Aspect.with_one_of(tags_component) }
+		let( :colored_aspect ) { Chione::Aspect.with_one_of(color_component) }
+		let( :tagged_located_aspect ) do
+			Chione::Aspect.with_all_of( location_component, tags_component )
+		end
+
+
+		it "can look up sets of entities which match Aspects" do
+			entities_with_location = world.entities_with( location_aspect )
+			expect( entities_with_location ).to contain_exactly( entity1.id, entity2.id )
+
+			entities_with_tags = world.entities_with( tags_aspect )
+			expect( entities_with_tags ).to contain_exactly( entity2.id, entity3.id )
+
+			entities_with_both = world.entities_with( tagged_located_aspect )
+			expect( entities_with_both ).to contain_exactly( entity2.id )
+
+			entities_with_color = world.entities_with( colored_aspect )
+			expect( entities_with_color ).to be_empty
 		end
 
 	end

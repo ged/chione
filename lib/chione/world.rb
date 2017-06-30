@@ -42,9 +42,7 @@ class Chione::World
 		@systems       = {}
 		@managers      = {}
 
-		@subscriptions = Hash.new do |h,k|
-			h[ k ] = Set.new
-		end
+		@subscriptions = Hash.new {|h,k| h[k] = Set.new }
 		@defer_events  = true
 		@deferred_events = []
 
@@ -52,6 +50,7 @@ class Chione::World
 		@world_threads = ThreadGroup.new
 
 		@entities_by_component = Hash.new {|h,k| h[k] = Set.new }
+		@components_by_entity = Hash.new {|h, k| h[k] = {} }
 
 		@timing_event_count = 0
 	end
@@ -84,6 +83,16 @@ class Chione::World
 	##
 	# The Thread object running the World's IO reactor loop
 	attr_reader :main_thread
+
+	##
+	# The Hash of Sets of Entities which have a particular component, keyed by
+	# Component class.
+	attr_reader :entities_by_component
+
+	##
+	# The Hash of Hashes of Components which have been added to an Entity, keyed by
+	# the Entity's ID and the Component class.
+	attr_reader :components_by_entity
 
 	##
 	# The Hash of event subscription callbacks registered with the world, keyed by
@@ -273,6 +282,10 @@ class Chione::World
 	end
 
 
+	#
+	# :section: Entity API
+	#
+
 	### Return a new Chione::Entity for the receiving World, using the optional
 	### +archetype+ to populate it with components if it's specified.
 	def create_entity( archetype=nil )
@@ -304,7 +317,8 @@ class Chione::World
 			self.has_entity?( entity )
 
 		self.publish( 'entity/destroyed', entity )
-		@entities_by_component.each_value {|set| set.delete(entity) }
+		self.entities_by_component.each_value {|set| set.delete(entity.id) }
+		self.components_by_entity.delete( entity.id )
 		@entities.delete( entity.id )
 	end
 
@@ -320,43 +334,71 @@ class Chione::World
 	end
 
 
-	### Register the specified +component+ as having been added to the specified
-	### +entity+.
+	#
+	# :section: Component API
+	#
+
+	### Add the specified +component+ to the specified +entity+.
 	def add_component_for( entity, component )
+		component = Chione::Component( component )
 		self.log.debug "Adding %p for %p" % [ component.class, entity ]
-		@entities_by_component[ component.class ].add( entity )
+		self.entities_by_component[ component.class ].add( entity.id )
+		self.components_by_entity[ entity.id ][ component.class ] = component
 	end
 
 
-	### Return an Enumerator of the Entities that have a Component composition that
-	### is compatible with the specified +system+'s aspect.
-	def entities_for( system )
-		system = system.class unless system.is_a?( Class )
-		return self.entities_with( system.aspect ).to_enum
+	### Return the Component instances associated with +entity+.
+	def components_for( entity )
+		entity = entity.id if entity.respond_to?( :id )
+		return self.components_by_entity[ entity ].values
 	end
 
 
-	### Return an Array of all entities that match the specified +aspect+.
-	def entities_with( aspect )
-		initial_set = if aspect.one_of.empty?
-				@entities_by_component.values
-			else
-				@entities_by_component.values_at( *aspect.one_of )
-			end
-
-		with_one = initial_set.reduce( :| )
-		with_all = @entities_by_component.values_at( *aspect.all_of ).reduce( with_one, :& )
-		without_any = @entities_by_component.values_at( *aspect.none_of ).reduce( with_all, :- )
-
-		return without_any
+	### Return the Component instance of the specified +component_class+ that's
+	### associated with the given +entity+, if it has one. 
+	def get_component_for( entity, component_class )
+		entity = entity.id if entity.respond_to?( :id )
+		return self.components_by_entity[ entity ][ component_class ]
 	end
 
+
+	### Remove the specified +component+ from the given +entity+. If +component+ is
+	### a Component subclass, any instance of it will be removed. If it's a
+	### Component instance, it will be removed iff it is the same instance associated
+	### with the given +entity+.
+	def remove_component_from( entity, component )
+		if component.is_a?( Class )
+			self.entities_by_component[ component ].delete( entity.id )
+			self.components_by_entity[ entity.id ].delete( component )
+		else
+			self.remove_component_from( entity, component.class ) if
+				self.has_component_for?( entity, component )
+		end
+	end
+
+
+	### Return +true+ if the specified +entity+ has the given +component+. If
+	### +component+ is a Component subclass, any instance of it will test +true+. If
+	### +component+ is a Component instance, it will only test +true+ if the
+	### +entity+ is associated with that particular instance.
+	def has_component_for?( entity, component )
+		if component.is_a?( Class )
+			return self.components_by_entity[ entity.id ].key?( component )
+		else
+			return self.components_by_entity[ entity.id ][ component.class ] == component
+		end
+	end
+
+
+	#
+	# :section: System API
+	#
 
 	### Add an instance of the specified +system_type+ to the world and return it.
 	### It will replace any existing system of the same type.
 	def add_system( system_type, *args )
 		system_obj = system_type.new( self, *args )
-		@systems[ system_type ] = system_obj
+		self.systems[ system_type ] = system_obj
 
 		if self.running?
 			self.log.info "Starting %p added to running world." % [ system_type ]
@@ -372,7 +414,7 @@ class Chione::World
 	### it if it's been added. Returns +nil+ if no instance of the specified
 	### +system_type+ was added.
 	def remove_system( system_type )
-		system_obj = @systems.delete( system_type ) or return nil
+		system_obj = self.systems.delete( system_type ) or return nil
 
 		self.publish( 'system/removed', system_obj )
 
@@ -385,11 +427,21 @@ class Chione::World
 	end
 
 
+	### Return an Array of all entities that match the specified +aspect+.
+	def entities_with( aspect )
+		return aspect.matching_entities( self.entities_by_component )
+	end
+
+
+	#
+	# :section: Manager API
+	#
+
 	### Add an instance of the specified +manager_type+ to the world and return it.
 	### It will replace any existing manager of the same type.
 	def add_manager( manager_type, *args )
 		manager_obj = manager_type.new( self, *args )
-		@managers[ manager_type ] = manager_obj
+		self.managers[ manager_type ] = manager_obj
 
 		if self.running?
 			self.log.info "Starting %p added to running world." % [ manager_type ]
@@ -405,7 +457,7 @@ class Chione::World
 	### return it if it's been added. Returns +nil+ if no instance of the specified
 	### +manager_type+ was added.
 	def remove_manager( manager_type )
-		manager_obj = @managers.delete( manager_type ) or return nil
+		manager_obj = self.managers.delete( manager_type ) or return nil
 		self.publish( 'manager/removed', manager_obj )
 
 		if self.running?
@@ -416,6 +468,8 @@ class Chione::World
 		return manager_obj
 	end
 
+
+	# :section:
 
 	#########
 	protected

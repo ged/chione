@@ -98,51 +98,34 @@ describe Chione::Entity do
 		end
 
 
-		it "lets components be fetched from it" do
-			entity.add_component( location_component )
-			entity.add_component( tags_component )
-
-			expect(
-				entity.find_component( location_component )
-			).to eq( entity.components[location_component] )
-		end
-
-
-		it "supports backward-compatible component-fetcher method" do
+		it "lets components be fetched for it" do
 			entity.add_component( location_component )
 			entity.add_component( tags_component )
 
 			expect(
 				entity.get_component( location_component )
-			).to eq( entity.components[location_component] )
+			).to be_an_instance_of( location_component )
 		end
 
 
-		it "lets one of a list of components be fetched from it" do
+		it "can have components removed from it" do
+			entity.add_component( location_component )
+			entity.add_component( tags_component )
+
+			entity.remove_component( tags_component )
+
+			expect( entity ).to have_component( location_component )
+			expect( entity ).to_not have_component( tags_component )
+		end
+
+
+		it "returns nil when fetching a component the entity doesn't have" do
 			entity.add_component( location_component )
 			entity.add_component( tags_component )
 
 			expect(
-				entity.find_component( bounding_box_component, location_component )
-			).to eq( entity.components[location_component] )
-		end
-
-
-		it "raises a KeyError if it doesn't have a fetched component" do
-			entity.add_component( tags_component )
-
-			expect {
-				entity.find_component( location_component )
-			}.to raise_error( KeyError, /#{entity.id} doesn't have/i )
-		end
-
-
-		it "raises a KeyError if it doesn't have any of several fetched components" do
-			entity.add_component( tags_component )
-
-			expect {
-				entity.find_component( location_component, bounding_box_component )
-			}.to raise_error( KeyError, /#{entity.id} doesn't have any of/i )
+				entity.get_component( bounding_box_component )
+			).to be_nil
 		end
 
 	end

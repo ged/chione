@@ -36,25 +36,40 @@ describe Chione::System do
 
 
 		it "has a default Aspect which matches all entities" do
-			expect( subclass.aspect ).to be_empty
+			expect( subclass.aspects.keys ).to contain_exactly( :default )
+			expect( subclass.aspects[:default] ).to be_empty
 		end
 
 
-		it "can declare components for its aspect" do
-			subclass.aspect all_of: volition_component,
+		it "can declare components for its default aspect" do
+			subclass.aspect :default,
+				all_of: volition_component,
 				one_of: [ tags_component, location_component ]
 
-			expect( subclass.aspect ).to_not be_empty
-			expect( subclass.aspect.all_of ).to include( volition_component )
-			expect( subclass.aspect.one_of ).to include( tags_component, location_component )
+			expect( subclass.aspects.keys ).to contain_exactly( :default )
+			expect( subclass.aspects[:default].all_of ).to include( volition_component )
+			expect( subclass.aspects[:default].one_of ).
+				to include( tags_component, location_component )
 		end
 
 
-		it "can declare required components for its aspect via shorthand syntax" do
-			subclass.for_entities_that_have( volition_component )
+		it "can declare a named aspect" do
+			subclass.aspect( :with_location, all_of: location_component )
 
-			expect( subclass.aspect ).to_not be_empty
-			expect( subclass.aspect.all_of ).to include( volition_component )
+			expect( subclass.aspects.keys ).to contain_exactly( :with_location )
+			expect( subclass.aspects[:with_location].all_of ).
+				to contain_exactly( location_component )
+		end
+
+
+		it "can declare more than one named aspect" do
+			subclass.aspect( :with_location, all_of: location_component )
+			subclass.aspect( :self_movable, all_of: [location_component, volition_component] )
+
+			expect( subclass.aspects.keys ).to contain_exactly( :with_location, :self_movable )
+			expect( subclass.aspects[:with_location].all_of ).to contain_exactly( location_component )
+			expect( subclass.aspects[:self_movable].all_of ).
+				to contain_exactly( location_component, volition_component )
 		end
 
 
@@ -62,7 +77,8 @@ describe Chione::System do
 
 			let( :subclass ) do
 				subclass = super()
-				subclass.aspect all_of: volition_component,
+				subclass.aspect :default,
+					all_of: volition_component,
 					one_of: [ tags_component, location_component ]
 				subclass
 			end
@@ -85,7 +101,7 @@ describe Chione::System do
 				ent3.add_component( volition_component )
 
 				expect( instance.entities ).to be_a( Enumerator )
-				expect( instance.entities ).to contain_exactly( ent1, ent2 )
+				expect( instance.entities ).to contain_exactly( ent1.id, ent2.id )
 			end
 
 

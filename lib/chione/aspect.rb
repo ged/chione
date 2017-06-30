@@ -100,6 +100,24 @@ class Chione::Aspect
 	end
 
 
+	### Given an +entity_hash+ keyed by Component class, return the subset of
+	### values matching the receiving Aspect.
+	def matching_entities( entity_hash )
+		initial_set = if self.one_of.empty?
+				entity_hash.values
+			else
+				entity_hash.values_at( *self.one_of )
+			end
+
+		with_one = initial_set.reduce( :| )
+		with_all = entity_hash.values_at( *self.all_of ).reduce( with_one, :& )
+		without_any = entity_hash.values_at( *self.none_of ).reduce( with_all, :- )
+
+		return without_any
+	end
+
+
+
 	#########
 	protected
 	#########

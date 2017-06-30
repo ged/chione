@@ -57,7 +57,7 @@ module Chione::Archetype
 	### Construct a new entity for the specified +world+ with all of the archetype's
 	### components.
 	def construct_for( world )
-		entity = world.create_entity
+		entity = world.create_blank_entity
 		self.components.each do |component_type, args|
 			component = component_type.new( *args )
 			entity.add_component( component )

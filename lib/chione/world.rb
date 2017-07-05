@@ -355,7 +355,7 @@ class Chione::World
 
 
 	### Return the Component instance of the specified +component_class+ that's
-	### associated with the given +entity+, if it has one. 
+	### associated with the given +entity+, if it has one.
 	def get_component_for( entity, component_class )
 		entity = entity.id if entity.respond_to?( :id )
 		return self.components_by_entity[ entity ][ component_class ]

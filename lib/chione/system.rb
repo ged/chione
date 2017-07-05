@@ -18,6 +18,16 @@ class Chione::System
 	include Chione::Inspection
 
 
+	# A Hash that auto-vivifies only its :default key
+	DEFAULT_ASPECT_HASH = Hash.new do |h,k|
+		if k == :default
+			h[k] = Chione::Aspect.new
+		else
+			nil
+		end
+	end
+
+
 	# Loggability API -- send logs to the Chione logger
 	log_to :chione
 
@@ -43,7 +53,6 @@ class Chione::System
 		aspect = aspect.with_one_of( one_of )   if one_of
 		aspect = aspect.with_none_of( none_of ) if none_of
 
-		self.aspects.delete( :default )
 		self.aspects[ name ] = aspect
 	end
 
@@ -51,7 +60,7 @@ class Chione::System
 	### Add some per-subclass data structures to inheriting +subclass+es.
 	def self::inherited( subclass )
 		super
-		subclass.instance_variable_set( :@aspects, {default: Chione::Aspect.new} )
+		subclass.instance_variable_set( :@aspects, DEFAULT_ASPECT_HASH.clone )
 	end
 
 
@@ -80,7 +89,7 @@ class Chione::System
 	end
 
 
-	### Return an Enumerator that yields the entities which match the given +aspect_name+. 
+	### Return an Enumerator that yields the entities which match the given +aspect_name+.
 	def entities( aspect_name=:default )
 		aspect = self.class.aspects[ aspect_name ] or
 			raise "This system doesn't have a %s aspect!" % [ aspect_name ]

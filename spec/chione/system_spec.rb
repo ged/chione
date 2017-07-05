@@ -36,7 +36,7 @@ describe Chione::System do
 
 
 		it "has a default Aspect which matches all entities" do
-			expect( subclass.aspects.keys ).to contain_exactly( :default )
+			expect( subclass.aspects ).to be_empty
 			expect( subclass.aspects[:default] ).to be_empty
 		end
 
@@ -73,13 +73,25 @@ describe Chione::System do
 		end
 
 
+		it "keeps an explicitly-defined default aspect event if other named ones are added" do
+			subclass.aspect( :default, all_of: location_component )
+			subclass.aspect( :self_movable, all_of: [location_component, volition_component] )
+
+			expect( subclass.aspects.keys ).to contain_exactly( :default, :self_movable )
+			expect( subclass.aspects[:default].all_of ).to contain_exactly( location_component )
+			expect( subclass.aspects[:self_movable].all_of ).
+				to contain_exactly( location_component, volition_component )
+		end
+
+
 		describe "instance" do
 
 			let( :subclass ) do
 				subclass = super()
-				subclass.aspect :default,
+				subclass.aspect( :default,
 					all_of: volition_component,
-					one_of: [ tags_component, location_component ]
+					one_of: [tags_component, location_component] )
+				subclass.aspect( :tagged, all_of: tags_component )
 				subclass
 			end
 
@@ -88,22 +100,34 @@ describe Chione::System do
 			end
 
 
-			it "can enumerate the entities from the world that match its aspect" do
-				ent1 = world.create_entity
-				ent1.add_component( volition_component )
-				ent1.add_component( tags_component )
+			before( :each ) do
+				@ent1 = world.create_entity
+				@ent1.add_component( volition_component )
+				@ent1.add_component( tags_component )
 
-				ent2 = world.create_entity
-				ent2.add_component( volition_component )
-				ent2.add_component( location_component )
+				@ent2 = world.create_entity
+				@ent2.add_component( volition_component )
+				@ent2.add_component( location_component )
 
-				ent3 = world.create_entity
-				ent3.add_component( volition_component )
+				@ent3 = world.create_entity
+				@ent3.add_component( volition_component )
 
-				expect( instance.entities ).to be_a( Enumerator )
-				expect( instance.entities ).to contain_exactly( ent1.id, ent2.id )
+				@ent4 = world.create_entity
+				@ent4.add_component( location_component )
+				@ent4.add_component( tags_component )
 			end
 
+
+			it "can enumerate the entities from the world that match its default aspect" do
+				expect( instance.entities ).to be_a( Enumerator )
+				expect( instance.entities ).to contain_exactly( @ent1.id, @ent2.id )
+			end
+
+
+			it "can enumerate the entities from the world that match one of its named aspects" do
+				expect( instance.entities(:tagged) ).to be_a( Enumerator )
+				expect( instance.entities(:tagged) ).to contain_exactly( @ent1.id, @ent4.id )
+			end
 
 		end
 

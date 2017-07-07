@@ -95,39 +95,27 @@ describe Chione::System do
 			end
 
 
-			it "can register a handler method for a named event with the default aspect" do
-				subclass.on( 'entity/created' ) do |entity, components|
+			it "can register a handler method for an event" do
+				subclass.on( 'entity/created' ) do |event|
 					# no-op
 				end
 
 				expect( subclass.event_handlers ).
-					to include( ['entity/created', 'on_entity_created_with_default'] )
-				expect( subclass.instance_methods ).to include( :on_entity_created_with_default )
+					to include( ['entity/created', 'on_entity_created_event'] )
+				expect( subclass.instance_methods ).to include( :on_entity_created_event )
 			end
 
 
-			it "can register a handler method for a named event with a named aspect" do
-				subclass.aspect( :location, all_of: location_component )
-				subclass.on( 'entity/created', with: :location ) do |entity, components|
+			it "provides a convenience declaration for the timing event" do
+				subclass.every_tick do |event|
 					# no-op
 				end
 
 				expect( subclass.event_handlers ).
-					to include( ['entity/created', 'on_entity_created_with_location'] )
-				expect( subclass.instance_methods ).to include( :on_entity_created_with_location )
+					to include( ['timing', 'on_timing_event'] )
+				expect( subclass.instance_methods ).to include( :on_timing_event )
 			end
 
-
-			it "can register a handler method for a named event with the inverse of a named aspect" do
-				subclass.aspect( :location, all_of: location_component )
-				subclass.on( 'entity/created', with: :location ) do |entity, components|
-					# no-op
-				end
-
-				expect( subclass.event_handlers ).
-					to include( ['entity/created', 'on_entity_created_with_location'] )
-				expect( subclass.instance_methods ).to include( :on_entity_created_with_location )
-			end
 
 		end
 
@@ -186,10 +174,6 @@ describe Chione::System do
 				expect( instance.entities(:tagged) ).to contain_exactly( @ent1.id, @ent4.id )
 			end
 
-
-			it "does some stuff" do
-				
-			end
 
 		end
 

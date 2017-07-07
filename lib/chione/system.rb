@@ -66,13 +66,10 @@ class Chione::System
 	### with the specified +aspect_name+ whenever an event matching +event_name+ is
 	### broadcast to the World. The block will be called with the entity and a Hash
 	### of the Components belonging to the entity that match the named Aspect.
-	def self::on( event_name, with: :default, &block )
+	def self::on( event_name, &block )
 		raise LocalJumpError, "no block given" unless block
 
-		aspect = self.aspects[ with ] or
-			raise "No Aspect named '%s' for %p" % [ with, self.name ]
-
-		method_name = "on_%s_with_%s" % [ event_name.tr('/', '_'), with ]
+		method_name = "on_%s_event" % [ event_name.tr('/', '_') ]
 		define_method( method_name, &block )
 
 		self.event_handlers << [ event_name, method_name ]
@@ -81,8 +78,8 @@ class Chione::System
 
 	### Declare a block that is called once every tick for each entity that matches the given
 	### +aspect+.
-	def self::every_tick( with: :default, &block )
-		return self.on( 'timing', with: with, &block )
+	def self::every_tick( &block )
+		return self.on( 'timing', &block )
 	end
 
 

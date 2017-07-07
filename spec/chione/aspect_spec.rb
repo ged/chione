@@ -140,6 +140,9 @@ describe Chione::Aspect do
 	end
 
 
+	it "can be inverted"
+
+
 	describe "entity-matching" do
 
 		it "can find the matching subset of values given a Hash keyed by Components" do

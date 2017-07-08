@@ -38,13 +38,29 @@ class Chione::Component
 
 
 	### Create a new component with the specified +values+.
-	def initialize( values={} )
+	def initialize( entity_id=nil, values={} )
+		if entity_id.is_a?( Hash )
+			values = entity_id
+			entity_id = nil
+		end
+
+		@entity_id = entity_id
+
 		if self.class.fields
 			self.class.fields.each do |name, default|
 				self.method( "#{name}=" ).call( values[name] || default_value(default) )
 			end
 		end
 	end
+
+
+	######
+	public
+	######
+
+	##
+	# The ID of the entity the component belongs to
+	attr_accessor :entity_id
 
 
 	### Return a description of the fields this component has.

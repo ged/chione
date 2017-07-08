@@ -12,6 +12,7 @@ describe Chione::Component do
 		let( :component_subclass ) do
 			Class.new( described_class )
 		end
+		let( :entity_id ) { '73BA6CB5-50CB-4EA4-9941-5EBF17D5D379' }
 
 
 		it "can declare fields" do
@@ -57,6 +58,18 @@ describe Chione::Component do
 
 			expect( instance1.oid ).to eq( instance1.object_id )
 			expect( instance2.oid ).to eq( 121212 )
+		end
+
+
+		it "can be created with an entity ID" do
+			component_subclass.field( :x )
+			component_subclass.field( :y )
+
+			instance = component_subclass.new( entity_id, x: 1, y: 18 )
+
+			expect( instance.entity_id ).to eq( entity_id )
+			expect( instance.x ).to eq( 1 )
+			expect( instance.y ).to eq( 18 )
 		end
 
 	end

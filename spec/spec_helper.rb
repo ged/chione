@@ -6,6 +6,7 @@ require 'simplecov' if ENV['COVERAGE']
 require 'rspec'
 require 'deprecatable'
 require 'loggability/spechelpers'
+require 'faker'
 
 require 'chione'
 
@@ -15,6 +16,8 @@ Deprecatable.options.has_at_exit_report = false
 module Chione::TestHelpers
 end
 
+
+Faker::Config.locale = :en
 
 
 RSpec.configure do |config|

@@ -3,9 +3,15 @@
 require_relative '../spec_helper'
 
 require 'chione/system'
+require 'chione/fixtures'
 
 
 describe Chione::System do
+
+	before( :all ) do
+		Chione::Fixtures.load( :entities )
+	end
+
 
 	let( :location_component ) do
 		Class.new( Chione::Component ) do
@@ -30,7 +36,20 @@ describe Chione::System do
 	describe "subclass" do
 
 		let( :subclass ) do
-			Class.new(described_class)
+			Class.new( described_class ) do
+				def initialize( * )
+					super
+					@calls = []
+				end
+				attr_reader :calls
+
+				def inserted( *args )
+					self.calls << [ __method__, args ]
+				end
+				def removed( *args )
+					self.calls << [ __method__, args ]
+				end
+			end
 		end
 		let( :world ) { Chione::World.new }
 
@@ -85,6 +104,48 @@ describe Chione::System do
 					to contain_exactly( location_component, volition_component )
 			end
 
+
+			it "is notified when adding a component causes an entity to start matching one of its aspects" do
+				pending "reworking Aspects to cache the entity subsets which they match"
+				subclass.aspect( :with_location, all_of: location_component )
+				subclass.aspect( :self_movable, all_of: [location_component, volition_component] )
+
+				entity = world.create_entity
+
+				sys = world.add_system( subclass )
+				sys.start
+
+				world.add_component_to( entity, location_component )
+				world.publish_deferred_events
+
+				expect( sys.calls.length ).to eq( 1 )
+				expect( sys.calls ).to include([
+						:insert, [
+							:with_location,
+							entity.id,
+							{location_component: an_instance_of(location_component)}
+						]
+					])
+
+				world.add_component_to( entity, volition_component )
+				world.publish_deferred_events
+
+				expect( sys.calls.length ).to eq( 2 )
+				expect( sys.calls ).to include([
+						:insert, [
+							:self_movable,
+							entity.id,
+							{
+								location_component: an_instance_of(location_component),
+								volition_component: an_instance_of(volition_component)
+							}
+						]
+					])
+			end
+
+
+			it "is notified when an entity is created which matches one of its aspects"
+
 		end
 
 
@@ -96,7 +157,7 @@ describe Chione::System do
 
 
 			it "can register a handler method for an event" do
-				subclass.on( 'entity/created' ) do |event|
+				subclass.on( 'entity/created' ) do |*|
 					# no-op
 				end
 
@@ -107,7 +168,7 @@ describe Chione::System do
 
 
 			it "provides a convenience declaration for the timing event" do
-				subclass.every_tick do |event|
+				subclass.every_tick do |*|
 					# no-op
 				end
 

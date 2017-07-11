@@ -36,6 +36,8 @@ hoespec = Hoe.spec 'chione' do |spec|
 	spec.dependency 'pluggability',    '~> 0.4'
 	spec.dependency 'uuid',            '~> 2.3'
 	spec.dependency 'deprecatable',    '~> 1.0'
+	spec.dependency 'fluent_fixtures', '~> 0.6'
+	spec.dependency 'faker',           '~> 1.8'
 
 	spec.dependency 'hoe-deveiate',            '~> 1.0',  :developer
 	spec.dependency 'simplecov',               '~> 0.12',  :developer

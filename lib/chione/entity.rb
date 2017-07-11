@@ -44,7 +44,8 @@ class Chione::Entity
 	attr_reader :world
 
 
-	### Return the components that the entity's World has registered for it.
+	### Return the components that the entity's World has registered for it as a Hash
+	### keyed by the Component class.
 	def components
 		return self.world.components_for( self )
 	end
@@ -54,7 +55,7 @@ class Chione::Entity
 	### subclass of Chione::Component, an instance of such a subclass, or the name
 	### of a subclass. It will replace any existing component of the same type.
 	def add_component( component )
-		self.world.add_component_for( self, component )
+		self.world.add_component_to( self, component )
 	end
 
 
@@ -87,7 +88,7 @@ class Chione::Entity
 	def inspect_details
 		return "ID=%s (%s)" % [
 			self.id,
-			":TODO:" # self.components.keys.map( &:name ).sort.join( '+' )
+			self.components.keys.map( &:name ).sort.join( '+' )
 		]
 	end
 

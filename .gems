@@ -1,5 +1,7 @@
 configurability
 deprecatable
+faker
+fluent_fixtures
 hoe-deveiate
 loggability
 pluggability

@@ -259,7 +259,7 @@ describe Chione::World do
 			entity = world.create_entity( archetype )
 
 			expect( entity ).to be_a( Chione::Entity )
-			expect( world.components_for(entity).map(&:class) ).
+			expect( world.components_for(entity).keys ).
 				to contain_exactly( *archetype.components.keys )
 		end
 
@@ -309,14 +309,14 @@ describe Chione::World do
 
 		it "can add a component for an entity" do
 			entity = world.create_entity
-			world.add_component_for( entity, location_component )
+			world.add_component_to( entity, location_component )
 			expect( world ).to have_component_for( entity, location_component )
 		end
 
 
 		it "can remove a component from an entity" do
 			entity = world.create_entity
-			world.add_component_for( entity, location_component )
+			world.add_component_to( entity, location_component )
 			world.remove_component_from( entity, location_component )
 			expect( world ).to_not have_component_for( entity, location_component )
 		end
@@ -326,7 +326,7 @@ describe Chione::World do
 			entity = world.create_entity
 
 			expect( world ).to_not have_component_for( entity, location_component )
-			world.add_component_for( entity, location_component )
+			world.add_component_to( entity, location_component )
 			expect( world ).to have_component_for( entity, location_component )
 		end
 

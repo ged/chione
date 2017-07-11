@@ -96,8 +96,25 @@ class Chione::Aspect
 
 	### Returns true if the receiver is an empty aspect, i.e., matches all entities.
 	def empty?
-		return [ self.one_of, self.all_of, self.none_of ].all?( &:empty? )
+		return self.one_of.empty? && self.all_of.empty? && self.none_of.empty?
 	end
+
+
+	### Returns +true+ if the components contained in the specified +component_hash+
+	### match the Aspect's specifications.
+	def matches?( component_hash )
+		return true if self.empty?
+
+		component_hash = component_hash.components if component_hash.respond_to?( :components )
+
+		return false unless self.one_of.empty? ||
+			self.one_of.any? {|component| component_hash.key?(component) }
+		return false unless self.none_of.none? {|component| component_hash.key?(component) }
+		return false unless self.all_of.all? {|component| component_hash.key?(component) }
+
+		return true
+	end
+	alias_method :match, :matches?
 
 
 	### Given an +entity_hash+ keyed by Component class, return the subset of

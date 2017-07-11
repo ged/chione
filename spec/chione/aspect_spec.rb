@@ -4,20 +4,28 @@ require_relative '../spec_helper'
 
 require 'chione/aspect'
 require 'chione/component'
+require 'chione/fixtures'
 
 
 describe Chione::Aspect do
+
+	before( :all ) do
+		Chione::Fixtures.load( :entities )
+	end
+
 
 	let( :location ) do
 		Class.new( Chione::Component ) do
 			field :x, default: 0
 			field :y, default: 0
+			def self::name; "Location"; end
 		end
 	end
 
 	let( :tags ) do
 		Class.new( Chione::Component ) do
 			field :tags, default: []
+			def self::name; "Tags"; end
 		end
 	end
 
@@ -27,6 +35,7 @@ describe Chione::Aspect do
 			field :shade, default: 0
 			field :value, default: 0
 			field :opacity, default: 0
+			def self::name; "Color"; end
 		end
 	end
 
@@ -145,25 +154,72 @@ describe Chione::Aspect do
 
 	describe "entity-matching" do
 
+		let( :world ) { Chione::World.new }
+
+		let( :entity ) { Chione::Fixtures.entity(world) }
+		let!( :entity1 ) do
+			entity.with_components( location ).instance
+		end
+		let!( :entity2 ) do
+			entity.with_components( location, color ).instance
+		end
+		let!( :entity3 ) do
+			entity.with_components( location, color, tags ).instance
+		end
+		let!( :entity4 ) do
+			entity.with_components( color, tags ).instance
+		end
+		let!( :entity5 ) do
+			entity.with_components( tags ).instance
+		end
+
+
 		it "can find the matching subset of values given a Hash keyed by Components" do
-			world = Chione::World.new
-
-			entity1 = world.create_entity
-			world.add_component_for( entity1, location.new )
-
-			entity2 = world.create_entity
-			world.add_component_for( entity2, location.new )
-			world.add_component_for( entity2, color.new )
-
-			entity3 = world.create_entity
-			world.add_component_for( entity3, location.new )
-			world.add_component_for( entity3, color.new )
-			world.add_component_for( entity3, tags.new )
-
 			aspect = described_class.with_all_of( color, location ).and_none_of( tags )
 			result = aspect.matching_entities( world.entities_by_component )
 
 			expect( result ).to contain_exactly( entity2.id )
+		end
+
+
+		it "always matches an individual entity if it's empty" do
+			aspect = described_class.new
+
+			expect( aspect ).to match( entity1 )
+			expect( aspect ).to match( entity2 )
+			expect( aspect ).to match( entity3 )
+			expect( aspect ).to match( entity4 )
+			expect( aspect ).to match( entity5 )
+		end
+
+
+		it "matches an individual entity if its components meet the criteria" do
+			aspect = described_class.with_all_of( color, location ).and_none_of( tags )
+
+			expect( aspect ).to_not match( entity1 )
+			expect( aspect ).to match( entity2 )
+			expect( aspect ).to_not match( entity3 )
+			expect( aspect ).to_not match( entity4 )
+			expect( aspect ).to_not match( entity5 )
+
+			aspect = described_class.with_one_of( tags, color )
+
+			expect( aspect ).to_not match( entity1 )
+			expect( aspect ).to match( entity2 )
+			expect( aspect ).to match( entity3 )
+			expect( aspect ).to match( entity4 )
+			expect( aspect ).to match( entity5 )
+		end
+
+
+		it "matches a component hash if it meets the criteria" do
+			aspect = described_class.with_all_of( color, location ).and_none_of( tags )
+
+			expect( aspect ).to_not match( entity1.components )
+			expect( aspect ).to match( entity2.components )
+			expect( aspect ).to_not match( entity3.components )
+			expect( aspect ).to_not match( entity4.components )
+			expect( aspect ).to_not match( entity5.components )
 		end
 
 	end

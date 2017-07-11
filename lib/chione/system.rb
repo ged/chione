@@ -68,8 +68,11 @@ class Chione::System
 	### of the Components belonging to the entity that match the named Aspect.
 	def self::on( event_name, &block )
 		raise LocalJumpError, "no block given" unless block
+		raise ArgumentError, "callback has wrong arity" unless block.arity >= 2 || block.arity < 0
 
 		method_name = "on_%s_event" % [ event_name.tr('/', '_') ]
+		self.log.debug "Making handler method #%s for %s events out of %p" %
+			[ method_name, event_name, block ]
 		define_method( method_name, &block )
 
 		self.event_handlers << [ event_name, method_name ]
@@ -87,7 +90,7 @@ class Chione::System
 	def self::inherited( subclass )
 		super
 		subclass.instance_variable_set( :@aspects, DEFAULT_ASPECT_HASH.clone )
-		subclass.instance_variable_set( :@event_handlers, [] )
+		subclass.instance_variable_set( :@event_handlers, self.event_handlers&.dup || [] )
 	end
 
 
@@ -108,7 +111,8 @@ class Chione::System
 
 	### Start the system.
 	def start
-		self.log.info "Starting the %p" % [ self.class ]
+		self.log.info "Starting the %p system; %d event handlers to register" %
+			[ self.class, self.class.event_handlers.length ]
 		self.class.event_handlers.each do |event_name, method_name|
 			callback = self.method( method_name )
 			self.log.info "Registering %p as a callback for '%s' events." % [ callback, event_name ]
@@ -136,6 +140,28 @@ class Chione::System
 
 		return set.to_enum( :each )
 	end
+
+
+	### Entity callback -- called whenever an entity has a component added to it
+	### that makes it start matching an aspect of the receiving System. The
+	### +aspect_name+ is the name of the Aspect it now matches, and the +components+
+	### are a Hash of the entity's components keyed by Class. By default this is a
+	### no-op.
+	def inserted( aspect_name, entity_id, components )
+		self.log.debug "Entity %s now matches the %s aspect." % [ entity_id, aspect_name ]
+	end
+
+
+	### Entity callback -- called whenever an entity has a component removed from it
+	### that makes it stop matching an aspect of the receiving System. The
+	### +aspect_name+ is the name of the Aspect it no longer matches, and the
+	### +components+ are a Hash of the entity's components keyed by Class. By
+	### default this is a no-op.
+	def removed( aspect_name, entity_id, components )
+		self.log.debug "Entity %s no longer matches the %s aspect." % [ entity_id, aspect_name ]
+	end
+
+
 
 
 	#########

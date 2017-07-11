@@ -12,6 +12,9 @@ lib/chione/assemblage.rb
 lib/chione/behaviors.rb
 lib/chione/component.rb
 lib/chione/entity.rb
+lib/chione/fixtures.rb
+lib/chione/fixtures/entities.rb
+lib/chione/iterating_system.rb
 lib/chione/manager.rb
 lib/chione/mixins.rb
 lib/chione/system.rb
@@ -20,6 +23,7 @@ spec/chione/archetype_spec.rb
 spec/chione/aspect_spec.rb
 spec/chione/component_spec.rb
 spec/chione/entity_spec.rb
+spec/chione/iterating_system_spec.rb
 spec/chione/manager_spec.rb
 spec/chione/mixins_spec.rb
 spec/chione/system_spec.rb

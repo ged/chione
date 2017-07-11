@@ -60,7 +60,7 @@ module Chione::Archetype
 		entity = world.create_blank_entity
 		self.components.each do |component_type, args|
 			component = component_type.new( *args )
-			entity.add_component( component )
+			world.add_component_to( entity, component )
 		end
 
 		return entity

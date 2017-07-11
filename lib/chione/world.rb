@@ -247,6 +247,7 @@ class Chione::World
 
 	### Send any deferred events to subscribers.
 	def publish_deferred_events
+		self.log.debug "Publishing %d deferred events" % [ self.deferred_events.length ]
 		while event = self.deferred_events.shift
 			self.call_subscription_callbacks( *event )
 		end
@@ -339,7 +340,7 @@ class Chione::World
 	#
 
 	### Add the specified +component+ to the specified +entity+.
-	def add_component_for( entity, component )
+	def add_component_to( entity, component )
 		component = Chione::Component( component )
 		component.entity_id = entity.id
 
@@ -347,12 +348,14 @@ class Chione::World
 		self.entities_by_component[ component.class ].add( entity.id )
 		self.components_by_entity[ entity.id ][ component.class ] = component
 	end
+	alias_method :add_component_for, :add_component_to
 
 
-	### Return the Component instances associated with +entity+.
+	### Return a Hash of the Component instances associated with +entity+, keyed by
+	### their class.
 	def components_for( entity )
 		entity = entity.id if entity.respond_to?( :id )
-		return self.components_by_entity[ entity ].values
+		return self.components_by_entity[ entity ].dup
 	end
 
 
@@ -377,6 +380,7 @@ class Chione::World
 				self.has_component_for?( entity, component )
 		end
 	end
+	alias_method :remove_component_for, :remove_component_from
 
 
 	### Return +true+ if the specified +entity+ has the given +component+. If

@@ -28,6 +28,19 @@ describe Chione::Component do
 		end
 
 
+		it "includes a description of its field in its inspection output" do
+			component_subclass.field( :name )
+			component_subclass.field( :x )
+			component_subclass.field( :y )
+
+			instance = component_subclass.new
+
+			expect( instance.inspect ).to match( /\bname:/ )
+			expect( instance.inspect ).to match( /\bx:/ )
+			expect( instance.inspect ).to match( /\by:/ )
+		end
+
+
 		it "can declare fields with default values" do
 			component_subclass.field( :x, default: 0 )
 			component_subclass.field( :y, default: 18 )

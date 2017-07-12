@@ -126,7 +126,7 @@ class Chione::Aspect
 				entity_hash.values_at( *self.one_of )
 			end
 
-		with_one = initial_set.reduce( :| )
+		with_one = initial_set.reduce( :| ) || Set.new
 		with_all = entity_hash.values_at( *self.all_of ).reduce( with_one, :& )
 		without_any = entity_hash.values_at( *self.none_of ).reduce( with_all, :- )
 

@@ -97,6 +97,11 @@ class Chione::System
 	### Create a new Chione::System for the specified +world+.
 	def initialize( world, * )
 		@world  = world
+		@aspect_entities = self.class.aspects.each_with_object( {} ) do |(aspect_name, aspect), hash|
+			matching_set = world.entities_with( aspect )
+			self.log.debug "Initial Set with the %s aspect: %p" % [ aspect_name, matching_set]
+			hash[ aspect_name ] = matching_set
+		end
 	end
 
 
@@ -107,6 +112,10 @@ class Chione::System
 	##
 	# The World which the System belongs to
 	attr_reader :world
+
+	##
+	# The Hash of Sets of entity IDs which match the System's aspects, keyed by aspect name.
+	attr_reader :aspect_entities
 
 
 	### Start the system.
@@ -133,12 +142,26 @@ class Chione::System
 
 	### Return an Enumerator that yields the entities which match the given +aspect_name+.
 	def entities( aspect_name=:default )
-		aspect = self.class.aspects[ aspect_name ] or
-			raise "This system doesn't have a %s aspect!" % [ aspect_name ]
+		return self.aspect_entities[ aspect_name ].to_enum( :each )
+	end
 
-		set = self.world.entities_with( aspect )
 
-		return set.to_enum( :each )
+	### Entity callback -- called whenever an entity has a component added to it or
+	### removed from it. Calls the appropriate callback (#inserted or #removed) if
+	### the component change caused it to belong to or stop belonging to one of the
+	### system's aspects.
+	def entity_components_updated( entity_id, components_hash )
+		self.class.aspects.each do |aspect_name, aspect|
+			entity_ids = self.aspect_entities[ aspect_name ]
+
+			if aspect.matches?( components_hash )
+				self.inserted( aspect_name, entity_id, components_hash ) if
+					entity_ids.add?( entity_id )
+			else
+				self.removed( aspect_name, entity_id, components_hash ) if
+					entity_ids.delete?( entity_id )
+			end
+		end
 	end
 
 
@@ -160,7 +183,6 @@ class Chione::System
 	def removed( aspect_name, entity_id, components )
 		self.log.debug "Entity %s no longer matches the %s aspect." % [ entity_id, aspect_name ]
 	end
-
 
 
 

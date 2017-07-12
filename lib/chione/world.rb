@@ -346,7 +346,10 @@ class Chione::World
 
 		self.log.debug "Adding %p for %p" % [ component.class, entity ]
 		self.entities_by_component[ component.class ].add( entity.id )
-		self.components_by_entity[ entity.id ][ component.class ] = component
+		component_hash = self.components_by_entity[ entity.id ]
+		component_hash[ component.class ] = component
+
+		self.update_entity_caches( entity, component_hash )
 	end
 	alias_method :add_component_for, :add_component_to
 
@@ -374,7 +377,9 @@ class Chione::World
 	def remove_component_from( entity, component )
 		if component.is_a?( Class )
 			self.entities_by_component[ component ].delete( entity.id )
-			self.components_by_entity[ entity.id ].delete( component )
+			component_hash = self.components_by_entity[ entity.id ]
+			component_hash.delete( component )
+			self.update_entity_caches( entity, component_hash )
 		else
 			self.remove_component_from( entity, component.class ) if
 				self.has_component_for?( entity, component )
@@ -480,6 +485,15 @@ class Chione::World
 	#########
 	protected
 	#########
+
+	### Update any entity caches in the system when an +entity+ has its +components+ hash changed.
+	def update_entity_caches( entity, components )
+		self.log.debug "  updating entity cache for %p" % [ entity ]
+		self.systems.each_value do |sys|
+			sys.entity_components_updated( entity.id, components )
+		end
+	end
+
 
 	### The loop the main thread executes after the world is started. The default
 	### implementation just broadcasts the +timing+ event, so you will likely want to

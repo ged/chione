@@ -45,9 +45,11 @@ describe Chione::System do
 
 				def inserted( *args )
 					self.calls << [ __method__, args ]
+					super
 				end
 				def removed( *args )
 					self.calls << [ __method__, args ]
+					super
 				end
 			end
 		end
@@ -106,7 +108,6 @@ describe Chione::System do
 
 
 			it "is notified when adding a component causes an entity to start matching one of its aspects" do
-				pending "reworking Aspects to cache the entity subsets which they match"
 				subclass.aspect( :with_location, all_of: location_component )
 				subclass.aspect( :self_movable, all_of: [location_component, volition_component] )
 
@@ -120,10 +121,10 @@ describe Chione::System do
 
 				expect( sys.calls.length ).to eq( 1 )
 				expect( sys.calls ).to include([
-						:insert, [
+						:inserted, [
 							:with_location,
 							entity.id,
-							{location_component: an_instance_of(location_component)}
+							{location_component => an_instance_of(location_component)}
 						]
 					])
 
@@ -132,19 +133,54 @@ describe Chione::System do
 
 				expect( sys.calls.length ).to eq( 2 )
 				expect( sys.calls ).to include([
-						:insert, [
+						:inserted, [
 							:self_movable,
 							entity.id,
 							{
-								location_component: an_instance_of(location_component),
-								volition_component: an_instance_of(volition_component)
+								location_component => an_instance_of(location_component),
+								volition_component => an_instance_of(volition_component)
 							}
 						]
 					])
 			end
 
 
-			it "is notified when an entity is created which matches one of its aspects"
+			it "is notified when removing a component causes an entity to no longer match one of its aspects" do
+				subclass.aspect( :with_location, all_of: location_component )
+				subclass.aspect( :self_movable, all_of: [location_component, volition_component] )
+
+				entity = world.create_entity
+				world.add_component_to( entity, location_component )
+				world.add_component_to( entity, volition_component )
+				world.publish_deferred_events
+
+				sys = world.add_system( subclass )
+				sys.start
+
+				world.remove_component_from( entity, volition_component )
+				world.publish_deferred_events
+
+				expect( sys.calls.length ).to eq( 1 )
+				expect( sys.calls ).to include([
+						:removed, [
+							:self_movable,
+							entity.id,
+							{location_component => an_instance_of(location_component)}
+						]
+					])
+
+				world.remove_component_from( entity, location_component )
+				world.publish_deferred_events
+
+				expect( sys.calls.length ).to eq( 2 )
+				expect( sys.calls ).to include([
+						:removed, [
+							:with_location,
+							entity.id,
+							{}
+						]
+					])
+			end
 
 		end
 
@@ -184,20 +220,11 @@ describe Chione::System do
 		describe "instance" do
 
 			let( :subclass ) do
-				subclass = Class.new( described_class ) do
-					def initialize( * )
-						super
-						@tracked_entities = []
-					end
-					attr_accessor :tracked_entities
-				end
+				subclass = Class.new( described_class )
 				subclass.aspect( :default,
 					all_of: volition_component,
 					one_of: [tags_component, location_component] )
 				subclass.aspect( :tagged, all_of: tags_component )
-				subclass.on( 'component/added' ) do |entity, components|
-					self.tracked_entities << [ entity, components ]
-				end
 				subclass
 			end
 

@@ -39,6 +39,25 @@ describe Chione::Aspect do
 		end
 	end
 
+	let( :world ) { Chione::World.new }
+
+	let( :entity ) { Chione::Fixtures.entity(world) }
+	let( :entity1 ) do
+		entity.with_components( location ).instance
+	end
+	let( :entity2 ) do
+		entity.with_components( location, color ).instance
+	end
+	let( :entity3 ) do
+		entity.with_components( location, color, tags ).instance
+	end
+	let( :entity4 ) do
+		entity.with_components( color, tags ).instance
+	end
+	let( :entity5 ) do
+		entity.with_components( tags ).instance
+	end
+
 
 	it "doesn't have any default criteria" do
 		aspect = described_class.new
@@ -154,27 +173,12 @@ describe Chione::Aspect do
 
 	describe "entity-matching" do
 
-		let( :world ) { Chione::World.new }
-
-		let( :entity ) { Chione::Fixtures.entity(world) }
-		let!( :entity1 ) do
-			entity.with_components( location ).instance
-		end
-		let!( :entity2 ) do
-			entity.with_components( location, color ).instance
-		end
-		let!( :entity3 ) do
-			entity.with_components( location, color, tags ).instance
-		end
-		let!( :entity4 ) do
-			entity.with_components( color, tags ).instance
-		end
-		let!( :entity5 ) do
-			entity.with_components( tags ).instance
-		end
+		let( :all_entities ) {[ entity1, entity2, entity3, entity4, entity5 ]}
 
 
 		it "can find the matching subset of values given a Hash keyed by Components" do
+			entities = all_entities()
+
 			aspect = described_class.with_all_of( color, location ).and_none_of( tags )
 			result = aspect.matching_entities( world.entities_by_component )
 
@@ -223,6 +227,7 @@ describe Chione::Aspect do
 		end
 
 	end
+
 
 end
 

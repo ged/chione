@@ -63,6 +63,19 @@ class Chione::Component
 	attr_accessor :entity_id
 
 
+	#########
+	protected
+	#########
+
+	### Return the detailed part of the Component's #inspect output.
+	def inspect_details
+		return "{%s} %s" % [
+			self.entity_id || "(unassigned)",
+			self.fields_description
+		]
+	end
+
+
 	### Return a description of the fields this component has.
 	def fields_description
 		return self.class.fields.keys.collect do |name|
@@ -72,16 +85,6 @@ class Chione::Component
 				truncate_string( val.inspect, 20 )
 			]
 		end.join( ' ' )
-	end
-
-
-	#########
-	protected
-	#########
-
-	### Return the detailed part of the Component's #inspect output.
-	def inspect_details
-		return self.fields_description
 	end
 
 

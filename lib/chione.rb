@@ -26,8 +26,11 @@ module Chione
 	autoload :Component,  'chione/component'
 	autoload :Entity,     'chione/entity'
 	autoload :Manager,    'chione/manager'
-	autoload :System,     'chione/system'
 	autoload :World,      'chione/world'
+
+	autoload :System,          'chione/system'
+	autoload :IteratingSystem, 'chione/iterating_system'
+
 
 	##
 	# The global UUID object for generating new UUIDs

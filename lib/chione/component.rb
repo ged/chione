@@ -29,11 +29,20 @@ class Chione::Component
 
 
 	### Declare a field for the component named +name+, with a default value of
-	### +default+.
-	def self::field( name, default: nil )
+	### +default+. If the optional +process_block+ is provided, it will be called
+	### with the new value being assigned to the field before it is set, and the
+	### return value of it will be used instead.
+	def self::field( name, default: nil, &process_block )
 		self.fields ||= {}
 		self.fields[ name ] = default
-		attr_accessor( name )
+
+		define_method( "process_#{name}", &process_block ) if process_block
+		define_method( "#{name}=" ) do |new_val|
+			new_val = self.send( "process_#{name}", new_val ) if self.respond_to?( "process_#{name}" )
+			self.instance_variable_set( "@#{name}", new_val )
+		end
+
+		attr_reader( name )
 	end
 
 

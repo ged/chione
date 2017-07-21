@@ -185,7 +185,6 @@ class Chione::System
 	end
 
 
-
 	#########
 	protected
 	#########

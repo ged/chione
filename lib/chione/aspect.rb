@@ -6,6 +6,7 @@ require 'loggability'
 
 require 'chione' unless defined?( Chione )
 require 'chione/mixins'
+require 'chione/archetype'
 
 
 # An expression of component-matching criteria used to find entities that should be
@@ -133,6 +134,12 @@ class Chione::Aspect
 		return without_any
 	end
 
+
+	### Return an (anonymous) Chione::Archetype module that can be used to create
+	### entities that match it.
+	def archetype
+		return Chione::Archetype.from_aspect( self )
+	end
 
 
 	#########

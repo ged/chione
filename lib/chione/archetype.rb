@@ -5,6 +5,7 @@ require 'pluggability'
 require 'loggability'
 
 require 'chione' unless defined?( Chione )
+require 'chione/mixins'
 
 
 # An Archetype mixin for defining factories for common entity configurations.
@@ -21,10 +22,29 @@ module Chione::Archetype
 
 	### Extension callback -- add archetype functionality to an extended +object+.
 	def self::extended( object )
-		super
 		object.extend( Loggability )
+		# object.extend( Chione::Inspection )
+		object.extend( Chione::MethodUtilities )
+
+		super
+
 		object.log_to( :chione )
 		object.components ||= {}
+		object.singleton_attr_accessor :from_aspect
+	end
+
+
+	### Create an anonymous Archetype Module that will create entities which match
+	### the specified +aspect+ (Chione::Aspect).
+	def self::from_aspect( aspect )
+		mod = Module.new
+		mod.extend( self )
+		mod.from_aspect = aspect
+
+		aspect.all_of.each( &mod.method(:add) )
+		mod.add( aspect.one_of.first ) unless aspect.one_of.empty?
+
+		return mod
 	end
 
 
@@ -65,6 +85,32 @@ module Chione::Archetype
 
 		return entity
 	end
+
+
+	### Return a human-readable representation of the object suitable for debugging.
+	def inspect
+		return "#<%p:%#016x %s>" % [
+			self.class,
+			self.object_id * 2,
+			self.inspect_details,
+		]
+	end
+
+
+	#########
+	protected
+	#########
+
+	### Provide details about the Archetype for #inspect output.
+	def inspect_details
+		if self.from_aspect
+			return "Chione::Archetype from %p" % [ self.from_aspect ]
+		else
+			return "Chione::Archetype for creating entities with %s" %
+				[ self.components.keys.map( &:name ).join(', ') ]
+		end
+	end
+
 
 end # module Chione::Archetype
 

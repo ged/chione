@@ -340,8 +340,8 @@ class Chione::World
 	#
 
 	### Add the specified +component+ to the specified +entity+.
-	def add_component_to( entity, component )
-		component = Chione::Component( component )
+	def add_component_to( entity, component, init_values={} )
+		component = Chione::Component( component, init_values )
 		component.entity_id = entity.id
 
 		self.log.debug "Adding %p for %p" % [ component.class, entity ]

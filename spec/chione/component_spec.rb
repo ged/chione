@@ -28,7 +28,7 @@ describe Chione::Component do
 		end
 
 
-		it "includes a description of its field in its inspection output" do
+		it "includes a description of its fields in its inspection output" do
 			component_subclass.field( :name )
 			component_subclass.field( :x )
 			component_subclass.field( :y )
@@ -48,6 +48,17 @@ describe Chione::Component do
 			instance = component_subclass.new
 			expect( instance.x ).to eq( 0 )
 			expect( instance.y ).to eq( 18 )
+		end
+
+
+		it "can declare fields with a block for validation or pre-processing" do
+			component_subclass.field( :coordinates, default: [0, 0] ) do |vals|
+				{ x: Integer(vals[0]), y: Integer(vals[1]) }
+			end
+
+			instance = component_subclass.new( coordinates: [88, 19] )
+			expect( instance.coordinates[:x] ).to eq( 88 )
+			expect( instance.coordinates[:y] ).to eq( 19 )
 		end
 
 

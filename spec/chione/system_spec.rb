@@ -85,6 +85,15 @@ describe Chione::System do
 			end
 
 
+			it "can declare a named aspect using simplified syntax" do
+				subclass.aspect( :with_location, location_component )
+
+				expect( subclass.aspects.keys ).to contain_exactly( :with_location )
+				expect( subclass.aspects[:with_location].all_of ).
+					to contain_exactly( location_component )
+			end
+
+
 			it "can declare more than one named aspect" do
 				subclass.aspect( :with_location, all_of: location_component )
 				subclass.aspect( :self_movable, all_of: [location_component, volition_component] )

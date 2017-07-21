@@ -3,6 +3,7 @@
 require_relative '../spec_helper'
 
 require 'chione/archetype'
+require 'chione/aspect'
 require 'chione/component'
 require 'chione/entity'
 require 'chione/world'
@@ -54,6 +55,19 @@ describe Chione::Archetype do
 		expect( entity ).to be_a( Chione::Entity )
 		expect( entity.world ).to be( world )
 		expect( entity.components ).to include( location_component, tags_component )
+	end
+
+
+	it "can be constructed from the Components specified in an Aspect" do
+		aspect = Chione::Aspect.with_all_of( location_component, tags_component )
+		archetype = described_class.from_aspect( aspect )
+
+		expect( archetype ).to be_a( Module )
+		expect( archetype.from_aspect ).to eq( aspect )
+
+		entity = archetype.construct_for( world )
+
+		expect( aspect ).to match( entity )
 	end
 
 

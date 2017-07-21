@@ -39,9 +39,9 @@ module Chione
 
 
 	### Coerce the specified +object+ into a Chione::Component and return it.
-	def self::Component( object )
+	def self::Component( object, init_values={} )
 		return object if object.is_a?( Chione::Component )
-		return Chione::Component.create( object ) if
+		return Chione::Component.create( object, init_values ) if
 			object.is_a?( Class ) || object.is_a?( String ) || object.is_a?( Symbol )
 		raise TypeError, "can't convert %p into Chione::Component" % [ object.class ]
 	end

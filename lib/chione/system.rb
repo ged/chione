@@ -62,10 +62,8 @@ class Chione::System
 	end
 
 
-	### Declare a block that is called once for each entity that matches the aspect
-	### with the specified +aspect_name+ whenever an event matching +event_name+ is
-	### broadcast to the World. The block will be called with the entity and a Hash
-	### of the Components belonging to the entity that match the named Aspect.
+	### Declare a block that is called once whenever an event matching +event_name+ is
+	### broadcast to the World.
 	def self::on( event_name, &block )
 		raise LocalJumpError, "no block given" unless block
 		raise ArgumentError, "callback has wrong arity" unless block.arity >= 2 || block.arity < 0

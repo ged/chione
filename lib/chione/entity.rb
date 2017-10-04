@@ -54,8 +54,8 @@ class Chione::Entity
 	### Add the specified +component+ to the entity. The +component+ can be a
 	### subclass of Chione::Component, an instance of such a subclass, or the name
 	### of a subclass. It will replace any existing component of the same type.
-	def add_component( component )
-		self.world.add_component_to( self, component )
+	def add_component( component, **init_values )
+		self.world.add_component_to( self, component, init_values )
 	end
 
 

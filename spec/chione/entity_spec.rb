@@ -98,6 +98,16 @@ describe Chione::Entity do
 		end
 
 
+		it "can have components with init arguments added to it" do
+			entity.add_component( location_component, x: 18, y: 51 )
+			entity.add_component( tags_component, tags: ['trace', 'volatile'] )
+
+			expect( entity.get_component(location_component).x ).to eq( 18 )
+			expect( entity.get_component(location_component).y ).to eq( 51 )
+			expect( entity.get_component(tags_component).tags ).to contain_exactly('trace', 'volatile')
+		end
+
+
 		it "lets components be fetched for it" do
 			entity.add_component( location_component )
 			entity.add_component( tags_component )

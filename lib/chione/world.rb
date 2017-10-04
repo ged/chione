@@ -341,12 +341,13 @@ class Chione::World
 
 	### Add the specified +component+ to the specified +entity+.
 	def add_component_to( entity, component, **init_values )
+		entity = entity.id if entity.respond_to?( :id )
 		component = Chione::Component( component, init_values )
-		component.entity_id = entity.id
+		component.entity_id = entity
 
 		self.log.debug "Adding %p for %p" % [ component.class, entity ]
-		self.entities_by_component[ component.class ].add( entity.id )
-		component_hash = self.components_by_entity[ entity.id ]
+		self.entities_by_component[ component.class ].add( entity )
+		component_hash = self.components_by_entity[ entity ]
 		component_hash[ component.class ] = component
 
 		self.update_entity_caches( entity, component_hash )
@@ -375,9 +376,10 @@ class Chione::World
 	### Component instance, it will be removed iff it is the same instance associated
 	### with the given +entity+.
 	def remove_component_from( entity, component )
+		entity = entity.id if entity.respond_to?( :id )
 		if component.is_a?( Class )
-			self.entities_by_component[ component ].delete( entity.id )
-			component_hash = self.components_by_entity[ entity.id ]
+			self.entities_by_component[ component ].delete( entity )
+			component_hash = self.components_by_entity[ entity ]
 			component_hash.delete( component )
 			self.update_entity_caches( entity, component_hash )
 		else
@@ -393,10 +395,11 @@ class Chione::World
 	### +component+ is a Component instance, it will only test +true+ if the
 	### +entity+ is associated with that particular instance.
 	def has_component_for?( entity, component )
+		entity = entity.id if entity.respond_to?( :id )
 		if component.is_a?( Class )
-			return self.components_by_entity[ entity.id ].key?( component )
+			return self.components_by_entity[ entity ].key?( component )
 		else
-			return self.components_by_entity[ entity.id ][ component.class ] == component
+			return self.components_by_entity[ entity ][ component.class ] == component
 		end
 	end
 
@@ -488,9 +491,10 @@ class Chione::World
 
 	### Update any entity caches in the system when an +entity+ has its +components+ hash changed.
 	def update_entity_caches( entity, components )
+		entity = entity.id if entity.respond_to?( :id )
 		self.log.debug "  updating entity cache for %p" % [ entity ]
 		self.systems.each_value do |sys|
-			sys.entity_components_updated( entity.id, components )
+			sys.entity_components_updated( entity, components )
 		end
 	end
 

@@ -1,3 +1,34 @@
+## v0.4.0 [2017-12-11] Michael Granger <ged@FaerieMUD.org>
+
+Enhancements:
+
+- Add caching and #inserted/#removed callbacks for aspect-membership to Systems.
+- Add Aspect#archetype and Archetype.from_aspect
+- Add Aspect#matches? to match individual entities
+- Add fixtures collection
+- Normalize entity IDs in the World API
+- Add constructor arguments to component-creation paths
+- Add the entity ID to Component's inspect output
+- Add Chione::IteratingSystem
+- Entities are thinner and systems make better use of named aspects
+- Added World#remove_system and _manager; publish the instance of /added and /removed events
+- Pull up common #inspect functionality into a mixin and use it everywhere.
+
+Changes:
+
+- The `every_tick` callback is now only passed the delta and the tick count
+- Init arguments are passed through to Component.add_component
+- Add a processing block to Component field declaration
+- Rename some component-API methods on the World for clarity (with aliases to the old methods)
+- Add the entity ID to components on registration
+- Event handler declarations no longer include an aspect.
+
+Bugfixes:
+
+- Fix API docs for Chione::System::on
+
+
+
 ##  v0.3.0 [2017-05-31] Michael Granger <ged@FaerieMUD.org>
 
 Changes:

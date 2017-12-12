@@ -223,6 +223,20 @@ describe Chione::System do
 			end
 
 
+			it "unwraps arguments to `every_tick` callbacks" do
+				received_delta = received_tick = nil
+				subclass.every_tick do |delta, tick|
+					received_delta = delta
+					received_tick = tick
+				end
+
+				instance = subclass.new( world )
+				instance.on_timing_event( 'timing', [0.016666666666666666, 0] )
+
+				expect( received_delta ).to be_within( 0.00001 ).of( 0.016666666666666666 )
+				expect( received_tick ).to eq( 0 )
+			end
+
 		end
 
 

@@ -52,7 +52,7 @@ class Chione::World
 		@entities_by_component = Hash.new {|h,k| h[k] = Set.new }
 		@components_by_entity = Hash.new {|h, k| h[k] = {} }
 
-		@timing_event_count = 0
+		@tick_count = 0
 	end
 
 
@@ -62,7 +62,7 @@ class Chione::World
 
 	##
 	# The number of times the event loop has executed.
-	attr_reader :timing_event_count
+	attr_accessor :tick_count
 
 	##
 	# The Hash of all Entities in the World, keyed by ID
@@ -129,6 +129,15 @@ class Chione::World
 	end
 
 
+	### Step the world +delta_seconds+ into the future.
+	def tick( delta_seconds=1.0/60.0 )
+		self.publish( 'timing', delta_seconds, self.tick_count )
+		self.publish_deferred_events
+
+		self.tick_count += 1
+	end
+
+
 	### Start any Managers registered with the world.
 	def start_managers
 		self.log.info "Starting %d Managers" % [ self.managers.length ]
@@ -177,7 +186,7 @@ class Chione::World
 
 	### Returns +true+ if the World is running (i.e., if #start has been called)
 	def running?
-		return self.started? && self.timing_event_count.nonzero?
+		return self.started? && self.tick_count.nonzero?
 	end
 
 
@@ -485,6 +494,7 @@ class Chione::World
 
 	# :section:
 
+
 	#########
 	protected
 	#########
@@ -507,22 +517,18 @@ class Chione::World
 		last_timing_event = Time.now
 		interval = self.class.timing_event_interval
 		self.defer_events = false
-		@timing_event_count = 0
+		self.tick_count = 0
 
 		loop do
 			previous_time, last_timing_event = last_timing_event, Time.now
-
-			self.publish( 'timing', last_timing_event - previous_time, @timing_event_count )
-			self.publish_deferred_events
-
-			@timing_event_count += 1
+			self.tick( last_timing_event - previous_time )
 			remaining_time = interval - (Time.now - last_timing_event)
 
 			if remaining_time > 0
 				sleep( remaining_time )
 			else
 				self.log.warn "Timing loop %d exceeded `timing_event_interval` (by %0.6fs)" %
-					[ @timing_event_count, remaining_time.abs ]
+					[ self.tick_count, remaining_time.abs ]
 			end
 		end
 

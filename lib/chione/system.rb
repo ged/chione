@@ -80,7 +80,9 @@ class Chione::System
 	### Declare a block that is called once every tick for each entity that matches the given
 	### +aspect+.
 	def self::every_tick( &block )
-		return self.on( 'timing', &block )
+		return self.on( 'timing' ) do |event_name, payload|
+			self.instance_exec( *payload, &block )
+		end
 	end
 
 
@@ -130,7 +132,7 @@ class Chione::System
 
 	### Stop the system.
 	def stop
-		self.class.event_handlers.each_value do |method_name|
+		self.class.event_handlers.each do |_, method_name|
 			callback = self.method( method_name )
 			self.log.info "Unregistering subscription for %p." % [ callback ]
 			self.world.unsubscribe( callback )

@@ -105,9 +105,10 @@ module Chione::Archetype
 	def inspect_details
 		if self.from_aspect
 			return "Chione::Archetype from %p" % [ self.from_aspect ]
+		elsif !self.components.empty?
+			return "Chione::Archetype for creating entities with %p" % [ self.components.keys ]
 		else
-			return "Chione::Archetype for creating entities with %s" %
-				[ self.components.keys.map( &:name ).join(', ') ]
+			return "blank Chione::Archetype"
 		end
 	end
 

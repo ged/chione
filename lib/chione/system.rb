@@ -96,6 +96,7 @@ class Chione::System
 
 	### Create a new Chione::System for the specified +world+.
 	def initialize( world, * )
+		self.log.debug "Setting up %p" % [ self.class ]
 		@world  = world
 		@aspect_entities = self.class.aspects.each_with_object( {} ) do |(aspect_name, aspect), hash|
 			matching_set = world.entities_with( aspect )

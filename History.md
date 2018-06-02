@@ -1,3 +1,15 @@
+##  v0.5.0 [2018-06-02] Michael Granger <ged@FaerieMUD.org>
+
+Bugfixes:
+
+- Fix blank archetype inspect details
+
+Changes:
+
+- Update configuration to use chione namespace. The `gameworld` config section
+  is now `world` under the `chione` section.
+
+
 ## v0.4.0 [2017-12-11] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:
@@ -11,7 +23,8 @@ Enhancements:
 - Add the entity ID to Component's inspect output
 - Add Chione::IteratingSystem
 - Entities are thinner and systems make better use of named aspects
-- Added World#remove_system and _manager; publish the instance of /added and /removed events
+- Added World#remove_system and _manager; publish the instance of /added and
+  /removed events
 - Pull up common #inspect functionality into a mixin and use it everywhere.
 
 Changes:
@@ -19,7 +32,8 @@ Changes:
 - The `every_tick` callback is now only passed the delta and the tick count
 - Init arguments are passed through to Component.add_component
 - Add a processing block to Component field declaration
-- Rename some component-API methods on the World for clarity (with aliases to the old methods)
+- Rename some component-API methods on the World for clarity (with aliases to
+  the old methods)
 - Add the entity ID to components on registration
 - Event handler declarations no longer include an aspect.
 

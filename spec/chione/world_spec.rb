@@ -94,15 +94,12 @@ describe Chione::World do
 	describe "configuration" do
 
 		it "is done via the Configurability API" do
-			new_stop_wait = Chione::World::CONFIG_DEFAULTS[:max_stop_wait] + 10
 			config = Configurability.default_config
-			config.gameworld = {
-				max_stop_wait: new_stop_wait
-			}
+			config.chione.world.max_stop_wait = 15
 
-			config.install
-
-			expect( described_class.max_stop_wait ).to eq( new_stop_wait )
+			expect {
+				config.install
+			}.to change { described_class.max_stop_wait }.to( 15 )
 		end
 
 	end

@@ -18,8 +18,8 @@ class Chione::World
 	# Loggability API -- send logs to the Chione logger
 	log_to :chione
 
-	# Configurability API -- use the 'gameworld' section of the config
-	configurability :gameworld do
+	# Configurability API -- use the 'world' section of the config
+	configurability 'chione.world' do
 
 		##
 		# :singleton-method:

@@ -73,7 +73,7 @@ and generate the API documentation.
 
 ## License
 
-Copyright (c) 2015-2017, Michael Granger
+Copyright (c) 2015-2018, Michael Granger
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

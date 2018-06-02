@@ -23,10 +23,10 @@ hoespec = Hoe.spec 'chione' do |spec|
 	spec.extra_rdoc_files = FileList[ '*.rdoc', '*.md' ]
 	spec.license 'BSD-3-Clause'
 	spec.urls = {
-		home:   'http://deveiate.org/projects/LinguaThauma',
-		code:   'http://repo.deveiate.org/LinguaThauma',
-		docs:   'http://deveiate.org/code/LinguaThauma',
-		github: 'http://github.com/ged/LinguaThauma',
+		home:   'http://deveiate.org/projects/chione',
+		code:   'http://repo.deveiate.org/chione',
+		docs:   'http://deveiate.org/code/chione',
+		github: 'http://github.com/ged/chione',
 	}
 
 	spec.developer 'Michael Granger', 'ged@FaerieMUD.org'

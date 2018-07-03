@@ -114,7 +114,8 @@ class Chione::World
 	def start
 		@main_thread = Thread.new do
 			Thread.current.abort_on_exception = true
-			self.log.info "Main thread (%s) started." % [ Thread.current ]
+			Thread.current.name = "Main World"
+			self.log.info "Main thread (%p) started." % [ Thread.current ]
 			@world_threads.add( Thread.current )
 			@world_threads.enclose
 

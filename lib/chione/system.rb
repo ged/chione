@@ -46,6 +46,10 @@ class Chione::System
 	# System is started.
 	singleton_attr_reader :event_handlers
 
+	##
+	# Systems to be injected by the world when this System is started.
+	singleton_attr_reader :injected_systems
+
 
 	### Add the specified +component_types+ to the Aspect of this System as being
 	### required in any entities it processes.
@@ -59,6 +63,18 @@ class Chione::System
 		aspect = aspect.with_none_of( none_of ) if none_of
 
 		self.aspects[ name ] = aspect
+	end
+
+
+	### Dependency-injection: declare one or more +systems+ that should be passed to #start
+	### by the running World.
+	def self::inject( *systems )
+		systems.each do |system_type|
+			system_type = system_type.to_sym
+			system_class = Chione::System.get_subclass( system_type )
+			attr_accessor( "#{system_type}_system" )
+			self.injected_systems[ system_type ] = system_class
+		end
 	end
 
 
@@ -91,6 +107,7 @@ class Chione::System
 		super
 		subclass.instance_variable_set( :@aspects, DEFAULT_ASPECT_HASH.clone )
 		subclass.instance_variable_set( :@event_handlers, self.event_handlers&.dup || [] )
+		subclass.instance_variable_set( :@injected_systems, self.injected_systems&.dup || {} )
 	end
 
 
@@ -120,9 +137,14 @@ class Chione::System
 
 
 	### Start the system.
-	def start
-		self.log.info "Starting the %p system; %d event handlers to register" %
-			[ self.class, self.class.event_handlers.length ]
+	def start( **injected_systems )
+		self.log.info "Starting the %p system; %d injected systems, %d event handlers to register" %
+			[ self.class, injected_systems.length, self.class.event_handlers.length ]
+
+		injected_systems.each do |name, other_system|
+			self.public_send( "#{name}_system=", other_system )
+		end
+
 		self.class.event_handlers.each do |event_name, method_name|
 			callback = self.method( method_name )
 			self.log.info "Registering %p as a callback for '%s' events." % [ callback, event_name ]

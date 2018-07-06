@@ -290,5 +290,62 @@ describe Chione::System do
 
 	end
 
+
+	describe "dependency-injection" do
+
+		let( :subclass1 ) do
+			Class.new( described_class )
+		end
+		let( :subclass2 ) do
+			Class.new( described_class )
+		end
+		let( :world ) { Chione::World.new }
+
+
+		before( :each ) do
+			@real_derivatives = described_class.derivatives.dup
+			# Pretend that the anonymous classes have names so they can be injected by name
+			described_class.derivatives.merge!( 'events' => subclass1, 'physics' => subclass2 )
+		end
+
+		after( :each ) do
+			described_class.derivatives.replace( @real_derivatives )
+		end
+
+
+		it "allows one system to have another system injected into it" do
+			subclass1.inject( :physics )
+
+			world.add_system( subclass1 )
+			world.add_system( subclass2 )
+			world.start_systems
+
+			result = world.systems[ subclass1 ].physics_system
+
+			expect( result ).to be_a( subclass2 )
+		end
+
+
+		it "allows systems to inject one another" do
+			subclass1.inject( :physics )
+			subclass2.inject( :events )
+
+			world.add_system( subclass1 )
+			world.add_system( subclass2 )
+			world.start_systems
+
+			expect( world.systems[subclass1].physics_system ).to be_a( subclass2 )
+			expect( world.systems[subclass2].events_system ).to be_a( subclass1 )
+		end
+
+
+		it "raises an error if the system to inject can't be loaded" do
+			expect {
+				subclass1.inject( :tantalus )
+			}.to raise_error( /couldn't find a system named 'tantalus'/i )
+		end
+
+	end
+
 end
 

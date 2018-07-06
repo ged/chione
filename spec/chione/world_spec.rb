@@ -410,6 +410,22 @@ describe Chione::World do
 			world.stop
 		end
 
+
+		it "raises an error if a system wants to inject a system that hasn't been added" do
+			@real_derivatives = Chione::System.derivatives.dup
+			Chione::System.derivatives[ 'warning' ] = Class.new( Chione::System ) do
+				def self::name; "WarningSystem"; end
+			end
+			test_system.inject( :warning )
+			world.add_system( test_system )
+
+			expect {
+				world.start_systems
+			}.to raise_error( /can't inject/i )
+		ensure
+			Chione::System.derivatives.replace( @real_derivatives )
+		end
+
 	end
 
 

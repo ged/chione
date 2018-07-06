@@ -163,9 +163,11 @@ class Chione::World
 	def start_systems
 		self.log.info "Starting %d Systems" % [ self.systems.length ]
 		self.systems.each do |system_class, sys|
+			injections = self.make_injection_hash_for( system_class )
+
 			self.log.debug "  starting %p" % [ system_class ]
 			start = Time.now
-			sys.start
+			sys.start( **injections )
 			finish = Time.now
 			self.log.debug "  started in %0.5fs" % [ finish - start ]
 		end
@@ -499,6 +501,21 @@ class Chione::World
 	#########
 	protected
 	#########
+
+	### Return a Hash of the loaded Chione::Systems that +system_class+ has requested
+	### be injected into it.
+	def make_injection_hash_for( system_class )
+		self.log.debug "Injecting %d other system/s into %p" %
+			[ system_class.injected_systems.length, system_class ]
+		return system_class.injected_systems.each_with_object({}) do |(name, injected_class), hash|
+			self.log.debug "  inject %p: %p" % [ name, injected_class ]
+			system = self.systems[ injected_class ] or
+				raise "Can't inject %p into %p: not configured to run it" %
+					[ injected_class, system_class]
+			hash[ name ] = system
+		end
+	end
+
 
 	### Update any entity caches in the system when an +entity+ has its +components+ hash changed.
 	def update_entity_caches( entity, components )

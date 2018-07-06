@@ -1,15 +1,15 @@
 # -*- encoding: utf-8 -*-
-# stub: chione 0.6.0.pre20180602085201 ruby lib
+# stub: chione 0.6.0.pre20180705184845 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "chione".freeze
-  s.version = "0.6.0.pre20180602085201"
+  s.version = "0.6.0.pre20180705184845"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Michael Granger".freeze]
   s.cert_chain = ["certs/ged.pem".freeze]
-  s.date = "2018-06-02"
+  s.date = "2018-07-06"
   s.description = "An Entity/Component System framework inspired by Artemis.\n\nThis library is still experimental. I am writing it by extracting out ideas from\na multi-user game I'm working on, and things may change radically if I find\nthat parts of it don't work or could be done a better way.\n\nThat said, let me know if you're using it for anything and I'll try to keep\nyou abreast of any changes I'm considering, and I'm happy to chat about ideas\nfor making it better via email or whatever.".freeze
   s.email = ["ged@FaerieMUD.org".freeze]
   s.extra_rdoc_files = ["History.md".freeze, "Manifest.txt".freeze, "README.md".freeze, "History.md".freeze, "README.md".freeze]
@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://deveiate.org/projects/chione".freeze
   s.licenses = ["BSD-3-Clause".freeze]
   s.rdoc_options = ["--main".freeze, "README.md".freeze]
-  s.required_ruby_version = Gem::Requirement.new(">= 2.3.3".freeze)
+  s.required_ruby_version = Gem::Requirement.new(">= 2.5.0".freeze)
   s.rubygems_version = "2.7.6".freeze
   s.summary = "An Entity/Component System framework inspired by Artemis".freeze
 

@@ -1,3 +1,11 @@
+## v0.6.0 [2018-07-05] Michael Granger <ged@FaerieMUD.org>
+
+Enhancements:
+
+- Add dependency-injection to Chione::System
+- Set the thread name of the main world thread
+
+
 ##  v0.5.0 [2018-06-02] Michael Granger <ged@FaerieMUD.org>
 
 Bugfixes:

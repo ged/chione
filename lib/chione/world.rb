@@ -103,11 +103,11 @@ class Chione::World
 	# Whether or not to queue published events instead of sending them to
 	# subscribers immediately.
 	attr_predicate_accessor :defer_events
+	alias_method :deferring_events?, :defer_events?
 
 	##
 	# The queue of events that have not yet been sent to subscribers.
 	attr_reader :deferred_events
-	alias_method :deferring_events?, :defer_events?
 
 
 	### Start the world; returns the Thread in which the world is running.
@@ -260,6 +260,7 @@ class Chione::World
 	### Send any deferred events to subscribers.
 	def publish_deferred_events
 		self.log.debug "Publishing %d deferred events" % [ self.deferred_events.length ]
+			unless self.deferred_events.empty?
 		while event = self.deferred_events.shift
 			self.call_subscription_callbacks( *event )
 		end

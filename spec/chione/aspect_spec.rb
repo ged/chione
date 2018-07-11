@@ -229,5 +229,33 @@ describe Chione::Aspect do
 	end
 
 
+	describe "and Archetypes" do
+
+		let( :testing_archetype ) do
+			arch = Module.new do
+				def self::name; "Testing"; end
+			end
+			arch.extend( Chione::Archetype )
+			arch.add( location )
+			arch.add( color )
+			arch
+		end
+
+
+		it "can be created to match a particular Archetype" do
+			instance = described_class.for_archetype( testing_archetype )
+			expect( instance ).to be_a( described_class )
+			expect( instance.all_of ).to contain_exactly( location, color )
+		end
+
+
+		it "reuses an instance used to create an archetype" do
+			instance = described_class.with_all_of([ color ]).with_one_of([ tags, location ])
+			arch = Chione::Archetype.from_aspect( instance )
+			expect( described_class.for_archetype(arch) ).to equal( instance )
+		end
+
+	end
+
 end
 

@@ -259,8 +259,8 @@ class Chione::World
 
 	### Send any deferred events to subscribers.
 	def publish_deferred_events
-		self.log.debug "Publishing %d deferred events" % [ self.deferred_events.length ]
-			unless self.deferred_events.empty?
+		self.log.debug "Publishing %d deferred events" % [ self.deferred_events.length ] unless
+			self.deferred_events.empty?
 		while event = self.deferred_events.shift
 			self.call_subscription_callbacks( *event )
 		end

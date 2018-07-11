@@ -40,6 +40,15 @@ class Chione::Aspect
 	end
 
 
+	### Create a new Aspect that will match the given +archetype+, unless the given
+	### archetype was created from an existing Aspect, in which case just returns
+	### that.
+	def self::for_archetype( archetype )
+		return archetype.from_aspect if archetype.from_aspect
+		return self.new.with_all_of( archetype.components.keys )
+	end
+
+
 	### Create a new empty Aspect
 	def initialize( one_of: [], all_of: [], none_of: [] )
 		@one_of  = Set.new( one_of )

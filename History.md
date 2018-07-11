@@ -1,3 +1,10 @@
+## v0.7.0 [2018-07-11] Michael Granger <ged@FaerieMUD.org>
+
+Enhancements:
+
+- Add a convenience method for creating Aspects that will match Archetypes
+
+
 ## v0.6.0 [2018-07-05] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:

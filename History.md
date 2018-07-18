@@ -1,3 +1,10 @@
+## v0.8.0 [2018-07-18] Michael Granger <ged@FaerieMUD.org>
+
+Enhancements:
+
+- Add the equality operator to Chione::Entity.
+
+
 ## v0.7.0 [2018-07-11] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:

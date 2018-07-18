@@ -80,6 +80,15 @@ class Chione::Entity
 	end
 
 
+	### Equality operator -- returns +true+ if the receiver and +other+ belong to
+	### the same world, have the same ID, and have equal components.
+	def ==( other )
+		return other.instance_of?( self.class ) &&
+			self.id == other.id
+	end
+	alias_method :eql?, :==
+
+
 	#########
 	protected
 	#########

@@ -138,6 +138,20 @@ describe Chione::Entity do
 			).to be_nil
 		end
 
+
+		it "is equal to another instance if they have the same ID" do
+			other_entity = described_class.new( entity.world, entity.id )
+
+			expect( entity ).to eq( other_entity )
+		end
+
+
+		it "is not equal to an instance of another class" do
+			other_object = Chione::Aspect.new
+
+			expect( entity ).to_not eq( other_object )
+		end
+
 	end
 
 end

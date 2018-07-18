@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
-# stub: chione 0.9.0.pre20180718091533 ruby lib
+# stub: chione 0.9.0.pre20180718110714 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "chione".freeze
-  s.version = "0.9.0.pre20180718091533"
+  s.version = "0.9.0.pre20180718110714"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
@@ -36,8 +36,8 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<hoe-deveiate>.freeze, ["~> 0.10"])
       s.add_development_dependency(%q<hoe-highline>.freeze, ["~> 0.2"])
       s.add_development_dependency(%q<simplecov>.freeze, ["~> 0.12"])
-      s.add_development_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0.3"])
-      s.add_development_dependency(%q<rdoc>.freeze, ["~> 5.1"])
+      s.add_development_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0.4"])
+      s.add_development_dependency(%q<rdoc>.freeze, ["< 6", ">= 4.0"])
       s.add_development_dependency(%q<hoe>.freeze, ["~> 3.17"])
     else
       s.add_dependency(%q<loggability>.freeze, ["~> 0.12"])
@@ -51,8 +51,8 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<hoe-deveiate>.freeze, ["~> 0.10"])
       s.add_dependency(%q<hoe-highline>.freeze, ["~> 0.2"])
       s.add_dependency(%q<simplecov>.freeze, ["~> 0.12"])
-      s.add_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0.3"])
-      s.add_dependency(%q<rdoc>.freeze, ["~> 5.1"])
+      s.add_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0.4"])
+      s.add_dependency(%q<rdoc>.freeze, ["< 6", ">= 4.0"])
       s.add_dependency(%q<hoe>.freeze, ["~> 3.17"])
     end
   else
@@ -67,8 +67,8 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<hoe-deveiate>.freeze, ["~> 0.10"])
     s.add_dependency(%q<hoe-highline>.freeze, ["~> 0.2"])
     s.add_dependency(%q<simplecov>.freeze, ["~> 0.12"])
-    s.add_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0.3"])
-    s.add_dependency(%q<rdoc>.freeze, ["~> 5.1"])
+    s.add_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0.4"])
+    s.add_dependency(%q<rdoc>.freeze, ["< 6", ">= 4.0"])
     s.add_dependency(%q<hoe>.freeze, ["~> 3.17"])
   end
 end

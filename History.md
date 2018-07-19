@@ -1,3 +1,11 @@
+## v0.9.0 [2018-07-19] Michael Granger <ged@FaerieMUD.org>
+
+Enhancements:
+
+- Make component fields more flexible.
+- Add DataUtilities mixin
+
+
 ## v0.8.0 [2018-07-18] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:

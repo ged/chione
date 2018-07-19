@@ -45,6 +45,9 @@ describe Chione::Component do
 			component_subclass.field( :x, default: 0 )
 			component_subclass.field( :y, default: 18 )
 
+			expect( component_subclass.default_for_x ).to eq( 0 )
+			expect( component_subclass.default_for_y ).to eq( 18 )
+
 			instance = component_subclass.new
 			expect( instance.x ).to eq( 0 )
 			expect( instance.y ).to eq( 18 )
@@ -56,9 +59,19 @@ describe Chione::Component do
 				{ x: Integer(vals[0]), y: Integer(vals[1]) }
 			end
 
+			expect( component_subclass.processor_for_coordinates ).to respond_to( :call )
+
 			instance = component_subclass.new( coordinates: [88, 19] )
 			expect( instance.coordinates[:x] ).to eq( 88 )
 			expect( instance.coordinates[:y] ).to eq( 19 )
+		end
+
+
+		it "can declare a field with arbitrary options" do
+			component_subclass.field( :x, default: 1, serializable: false )
+
+			expect( component_subclass.options_for_x ).to include( serializable: false )
+			expect( component_subclass.default_for_x ).to eq( 1 )
 		end
 
 
@@ -77,10 +90,12 @@ describe Chione::Component do
 		it "calls a callable default if it responds to #call" do
 			component_subclass.field( :oid, default: ->(obj) { obj.object_id } )
 
+			expect( component_subclass.default_for_oid ).to eq( component_subclass.object_id )
+
 			instance1 = component_subclass.new
 			instance2 = component_subclass.new( oid: 121212 )
 
-			expect( instance1.oid ).to eq( instance1.object_id )
+			expect( instance1.oid ).to eq( component_subclass.object_id )
 			expect( instance2.oid ).to eq( 121212 )
 		end
 

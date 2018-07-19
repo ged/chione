@@ -32,17 +32,46 @@ class Chione::Component
 	### +default+. If the optional +process_block+ is provided, it will be called
 	### with the new value being assigned to the field before it is set, and the
 	### return value of it will be used instead.
-	def self::field( name, default: nil, &process_block )
+	def self::field( name, **options, &process_block )
+		options[ :processor ] = process_block
 		self.fields ||= {}
-		self.fields[ name ] = default
+		self.fields[ name ] = options
 
-		define_method( "process_#{name}", &process_block ) if process_block
-		define_method( "#{name}=" ) do |new_val|
-			new_val = self.send( "process_#{name}", new_val ) if self.respond_to?( "process_#{name}" )
+		# Add some class method
+		self.define_singleton_method( "processor_for_#{name}" ) do
+			return self.fields.dig( name, :processor )
+		end
+		self.define_singleton_method( "default_for_#{name}" ) do
+			default = self.fields.dig( name, :default )
+			return default.call( self ) if default.respond_to?( :call )
+			return Chione::DataUtilities.deep_copy( default )
+		end
+		self.define_singleton_method( "options_for_#{name}" ) do
+			return self.fields[ name ]
+		end
+
+		# Add instance methods as a mixin so they can be overridden and super()ed to
+		mixin = self.make_field_mixin( name )
+		self.include( mixin )
+
+	end
+
+
+	### Make a mixin module with methods for the field with the specified +name+.
+	def self::make_field_mixin( name )
+		mixin = Module.new
+
+		mixin.attr_reader( name )
+		mixin.define_method( "process_#{name}" ) do |value|
+			processor = self.class.send( "processor_for_#{name}" ) or return value
+			return processor.call( value )
+		end
+		mixin.define_method( "#{name}=" ) do |new_val|
+			new_val = self.send( "process_#{name}", new_val )
 			self.instance_variable_set( "@#{name}", new_val )
 		end
 
-		attr_reader( name )
+		return mixin
 	end
 
 
@@ -56,8 +85,9 @@ class Chione::Component
 		@entity_id = entity_id
 
 		if self.class.fields
-			self.class.fields.each do |name, default|
-				self.method( "#{name}=" ).call( values[name] || default_value(default) )
+			self.class.fields.each_key do |name|
+				val = values[ name ] || self.class.send( "default_for_#{name}" )
+				self.public_send( "#{name}=", val )
 			end
 		end
 	end
@@ -101,20 +131,6 @@ class Chione::Component
 	#######
 	private
 	#######
-
-	### Process the given +default+ value so it's suitable for use as a default
-	### attribute value.
-	def default_value( default )
-		return default.call( self ) if default.respond_to?( :call )
-		return deep_copy( default )
-	end
-
-
-	### Make a deep copy of the specified +value+.
-	def deep_copy( value )
-		return Marshal.load( Marshal.dump(value) )
-	end
-
 
 	### Return a slice of the specified +string+ truncated to at most +maxlen+
 	### characters. Returns the unchanged +string+ if it's not longer than +maxlen+.

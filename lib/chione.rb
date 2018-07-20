@@ -49,7 +49,7 @@ module Chione
 
 	### Warn about deprecated constants.
 	def self::const_missing( name )
-		super unless name == :Assemblage
+		return super unless name == :Assemblage
 		warn "Chione::Assemblage has been renamed to Chione::Archetype. " \
 			"This alias will be removed before 1.0\n" \
 			"Used at #{caller(1).first}"

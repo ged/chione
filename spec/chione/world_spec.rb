@@ -34,6 +34,7 @@ describe Chione::World do
 			end
 		end
 	end
+
 	let( :test_manager ) do
 		Class.new( Chione::Manager ) do
 			def self::name; "TestManager"; end
@@ -88,6 +89,23 @@ describe Chione::World do
 		mod.add( location_component, x: 10, y: 8 )
 		mod.add( tags_component, tags: [:foo, :bar] )
 		mod
+	end
+
+
+	it "can return a Hash of status information" do
+		world.tick_count = 131
+		world.add_system( test_system )
+		world.add_manager( test_manager )
+
+		result = world.status
+
+		expect( result ).to be_a( Hash )
+		expect( result ).to include(
+			versions: a_hash_including( chione: Chione::VERSION ),
+			tick: 131,
+			systems: an_instance_of( Array ).and( include 'TestSystem' ),
+			managers: an_instance_of( Array ).and( include 'TestManager' )
+		)
 	end
 
 

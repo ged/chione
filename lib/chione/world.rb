@@ -110,6 +110,17 @@ class Chione::World
 	attr_reader :deferred_events
 
 
+	### Return a Hash of information about the world suitable for display in tools.
+	def status
+		return {
+			versions: { chione: Chione::VERSION },
+			tick: self.tick_count,
+			systems: self.systems.keys.map( &:name ),
+			managers: self.managers.keys.map( &:name )
+		}
+	end
+
+
 	### Start the world; returns the Thread in which the world is running.
 	def start
 		@main_thread = Thread.new do

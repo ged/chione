@@ -1,3 +1,14 @@
+## v0.10.0 [2018-07-20] Michael Granger <ged@FaerieMUD.org>
+
+Enhancements:
+
+- Add World#status.
+
+Bugfixes:
+
+- Fixed deprecation code for Assemblage.
+
+
 ## v0.9.0 [2018-07-19] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:

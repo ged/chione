@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
-# stub: chione 0.10.0.pre20180720131921 ruby lib
+# stub: chione 0.11.0.pre20180720132221 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "chione".freeze
-  s.version = "0.10.0.pre20180720131921"
+  s.version = "0.11.0.pre20180720132221"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]

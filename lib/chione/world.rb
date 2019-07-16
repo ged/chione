@@ -25,12 +25,16 @@ class Chione::World
 		# :singleton-method:
 		# Configurable: The maximum number of seconds to wait for any one System
 		# or Manager thread to exit before killing it when shutting down.
-		setting :max_stop_wait, default: 5
+		setting :max_stop_wait, default: 5 do |value|
+			Integer( value )
+		end
 
 		##
 		# :singleton-method:
 		# Configurable: The number of seconds between timing events.
-		setting :timing_event_interval, default: 1
+		setting :timing_event_interval, default: 1 do |value|
+			Float( value )
+		end
 
 	end
 
@@ -210,7 +214,7 @@ class Chione::World
 		self.world_threads.list.each do |thr|
 			next if thr == @main_thread
 			self.log.debug "  killing: %p" % [ thr ]
-			thr.join( self.class.max_stop_wait )
+			thr.join( Chione::World.max_stop_wait )
 		end
 	end
 
@@ -543,12 +547,12 @@ class Chione::World
 	### implementation just broadcasts the +timing+ event, so you will likely want to
 	### override this if the main thread should do something else.
 	def timing_loop
-		self.log.info "Starting timing loop."
 		last_timing_event = Time.now
-		interval = self.class.timing_event_interval
+		interval = Chione::World.timing_event_interval
 		self.defer_events = false
 		self.tick_count = 0
 
+		self.log.info "Starting timing loop with interval = %0.3fs." % [ interval ]
 		loop do
 			previous_time, last_timing_event = last_timing_event, Time.now
 			self.tick( last_timing_event - previous_time )

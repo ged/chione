@@ -155,6 +155,7 @@ class Chione::System
 
 	### Stop the system.
 	def stop
+		self.log.info "Stopping the %p system" % [ self.class ]
 		self.class.event_handlers.each do |_, method_name|
 			callback = self.method( method_name )
 			self.log.info "Unregistering subscription for %p." % [ callback ]

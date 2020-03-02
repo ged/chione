@@ -6,7 +6,7 @@ require 'chione/entity'
 require 'chione/component'
 
 
-describe Chione::Entity do
+RSpec.describe Chione::Entity do
 
 	before( :all ) do
 		@component_classes = Chione::Component.derivatives.dup

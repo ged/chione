@@ -7,7 +7,7 @@ require 'chione/component'
 require 'chione/fixtures'
 
 
-describe Chione::Aspect do
+RSpec.describe Chione::Aspect do
 
 	before( :all ) do
 		Chione::Fixtures.load( :entities )

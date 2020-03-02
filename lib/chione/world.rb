@@ -237,8 +237,8 @@ class Chione::World
 
 	### Subscribe to events with the specified +event_name+. Returns the callback object
 	### for later unsubscribe calls.
-	def subscribe( event_name, callback=nil )
-		callback = Proc.new if !callback && block_given?
+	def subscribe( event_name, callback=nil, &block )
+		callback ||= block
 
 		raise LocalJumpError, "no callback given" unless callback
 		raise ArgumentError, "callback is not callable" unless callback.respond_to?( :call )

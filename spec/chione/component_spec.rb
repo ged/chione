@@ -5,7 +5,7 @@ require_relative '../spec_helper'
 require 'chione/component'
 
 
-describe Chione::Component do
+RSpec.describe Chione::Component do
 
 	describe "concrete subclasses" do
 

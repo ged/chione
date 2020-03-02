@@ -5,7 +5,7 @@ require_relative '../spec_helper'
 require 'chione/mixins'
 
 
-describe Chione, "mixins" do
+RSpec.describe Chione, "mixins" do
 
 	describe Chione::MethodUtilities, 'used to extend a class' do
 
@@ -192,16 +192,6 @@ describe Chione, "mixins" do
 			copy = Chione::DataUtilities.deep_copy( original )
 
 			expect( copy.default_proc ).to eq( original.default_proc )
-		end
-
-		it "preserves taintedness of copied objects" do
-			original = Object.new
-			original.taint
-
-			copy = Chione::DataUtilities.deep_copy( original )
-
-			expect( copy ).to_not be( original )
-			expect( copy ).to be_tainted()
 		end
 
 		it "preserves frozen-ness of copied objects" do

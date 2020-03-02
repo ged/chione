@@ -4,7 +4,7 @@ require_relative 'spec_helper'
 
 require 'chione'
 
-describe Chione do
+RSpec.describe Chione do
 
 	after( :all ) do
 		Chione::Component.derivatives.clear

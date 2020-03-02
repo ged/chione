@@ -6,7 +6,7 @@ require 'chione/manager'
 require 'chione/world'
 
 
-describe Chione::Manager do
+RSpec.describe Chione::Manager do
 
 	let( :world ) { Chione::World.new }
 

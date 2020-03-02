@@ -6,7 +6,7 @@ require 'chione/system'
 require 'chione/fixtures'
 
 
-describe Chione::System do
+RSpec.describe Chione::System do
 
 	before( :all ) do
 		Chione::Fixtures.load( :entities )

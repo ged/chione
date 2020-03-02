@@ -12,7 +12,7 @@ require 'chione/manager'
 require 'chione/system'
 
 
-describe Chione::World do
+RSpec.describe Chione::World do
 
 	let( :world ) { described_class.new }
 

@@ -9,3 +9,5 @@ ChangeLog
 ^pkg/
 ^static/
 ^Gemfile\.lock$
+^gem\.deps\.rb\.lock$
+^spec/\.status$

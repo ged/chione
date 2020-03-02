@@ -8,7 +8,7 @@ require 'chione/component'
 require 'chione/entity'
 require 'chione/world'
 
-describe Chione::Archetype do
+RSpec.describe Chione::Archetype do
 
 	let( :world ) { Chione::World.new }
 

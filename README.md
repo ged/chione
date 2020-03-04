@@ -1,16 +1,16 @@
 # Chione
 
 home
-: http://faelidth.org/chione
+: https://faelidth.org/chione
 
 code
-: http://bitbucket.org/ged/chione
+: https://hg.sr.ht/~ged/chione
 
 github
-: http://github.com/ged/chione
+: https://github.com/ged/chione
 
 docs
-: http://faelidth.org/chione/docs
+: https://faelidth.org/chione/docs
 
 
 ## Description
@@ -28,7 +28,7 @@ for making it better via email or whatever.
 
 ## Prerequisites
 
-* Ruby 2.3
+* Ruby 2.5
 
 
 ## Installation
@@ -60,7 +60,7 @@ Other ECS Frameworks:
 ## Contributing
 
 You can check out the current development source with Mercurial via its
-[project page][bitbucket]. Or if you prefer Git, via
+[project page][sourcehut]. Or if you prefer Git, via
 [its Github mirror][github].
 
 After checking out the source, run:
@@ -71,9 +71,14 @@ This task will install any missing dependencies, run the tests/specs,
 and generate the API documentation.
 
 
+## Authors
+
+- Michael Granger <ged@faeriemud.org>
+
+
 ## License
 
-Copyright (c) 2015-2018, Michael Granger
+Copyright (c) 2015-2020, Michael Granger
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -102,6 +107,6 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-[bitbucket]: http://bitbucket.org/ged/chione
 [github]: https://github.com/ged/chione
+[sourcehut]: https://hg.sr.ht/~ged/chione
 

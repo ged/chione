@@ -1,3 +1,15 @@
+# Release History for chione
+
+---
+
+## v0.11.0 [2020-03-03] Michael Granger <ged@FaerieMUD.org>
+
+Improvements:
+
+- Tweak timing loop settings
+- Update for Ruby 2.7
+
+
 ## v0.10.0 [2018-07-20] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:

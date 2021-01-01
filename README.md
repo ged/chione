@@ -45,6 +45,7 @@ Articles/posts on ECS:
 * <http://www.richardlord.net/blog/what-is-an-entity-framework>
 * <http://www.richardlord.net/blog/why-use-an-entity-framework>
 * <http://cowboyprogramming.com/2007/01/05/evolve-your-heirachy/>
+* <https://dzone.com/articles/entity-component-systems-in-elixir>
 
 Other ECS Frameworks:
 

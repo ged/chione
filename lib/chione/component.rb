@@ -28,6 +28,15 @@ class Chione::Component
 	singleton_attr_accessor :fields
 
 
+	### Inheritance callback -- add some default instance variable values to
+	### subclasses.
+	def self::inherited( subclass )
+		super
+
+		subclass.fields ||= {}
+	end
+
+
 	### Declare a field for the component named +name+, with a default value of
 	### +default+. If the optional +process_block+ is provided, it will be called
 	### with the new value being assigned to the field before it is set, and the

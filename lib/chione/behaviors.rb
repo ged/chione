@@ -7,7 +7,7 @@ require 'chione'
 
 RSpec.shared_examples "a Chione Component" do |args|
 
-	if args.key?( :with_fields )
+	if args&.key?( :with_fields )
 
 		args[:with_fields].each do |field|
 

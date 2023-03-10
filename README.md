@@ -28,7 +28,7 @@ for making it better via email or whatever.
 
 ## Prerequisites
 
-* Ruby 2.5
+* Ruby 3.0+
 
 
 ## Installation

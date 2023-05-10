@@ -79,7 +79,7 @@ and generate the API documentation.
 
 ## License
 
-Copyright (c) 2015-2020, Michael Granger
+Copyright (c) 2015-2023, Michael Granger
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -109,5 +109,5 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 [github]: https://github.com/ged/chione
-[sourcehut]: https://hg.sr.ht/~ged/chione
+[sourcehut]: https://sr.ht/~ged/chione
 

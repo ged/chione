@@ -1,5 +1,4 @@
 # -*- ruby -*-
-#encoding: utf-8
 
 require 'tempfile'
 require 'chione' unless defined?( Chione )

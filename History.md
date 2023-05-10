@@ -1,6 +1,13 @@
 # Release History for chione
 
 ---
+## v0.12.0 [2023-05-10] Michael Granger <ged@faeriemud.org>
+
+Enhancements:
+
+- Add fields to inherited component classes
+- Update for Ruby 3
+
 
 ## v0.11.0 [2020-03-03] Michael Granger <ged@FaerieMUD.org>
 

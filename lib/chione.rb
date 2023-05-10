@@ -11,7 +11,7 @@ module Chione
 	extend Loggability
 
 	# Gem version
-	VERSION = '0.11.0'
+	VERSION = '0.12.0'
 
 
 	# Loggability API -- set up a log host
